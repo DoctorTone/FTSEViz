@@ -30,3 +30,7 @@ body {
     left: 40%;
     width: 20%;
 }
+#rotControls {
+    bottom: 1%;
+    right: 1%;
+}

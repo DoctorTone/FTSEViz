@@ -24,13 +24,12 @@ class FTSEApp extends BaseApp {
         const NUM_WALLS = 5;
         this.WALL_RADIUS = WALL_DEPTH;
         this.DIVS_PER_SEGMENT = 6;
-        let ROT_INC = (Math.PI * 2)/NUM_WALLS;
-        this.DIV_ROT_INC = ROT_INC/this.DIVS_PER_SEGMENT;
+        this.ROT_INC = (Math.PI * 2)/NUM_WALLS;
+        this.DIV_ROT_INC = this.ROT_INC/this.DIVS_PER_SEGMENT;
         this.SEG_OFFSET = 2;
 
-            //Main spindle
+        //Main spindle
         let parent = new THREE.Object3D();
-        parent.rotation.y = ROT_INC/2;
         let geom = new THREE.CylinderBufferGeometry(CENTRE_RADIUS, CENTRE_RADIUS, CENTRE_HEIGHT, SEGMENTS);
         let spindleMat = new THREE.MeshLambertMaterial({color: 0xFFFB37});
         let spindle = new THREE.Mesh(geom, spindleMat);
@@ -46,7 +45,7 @@ class FTSEApp extends BaseApp {
         for(i=0; i<NUM_WALLS; ++i) {
             wall = new THREE.Mesh(geom, wallMat);
             wallGroup = new THREE.Object3D();
-            wallGroup.rotation.y = ROT_INC*(i + 1);
+            wallGroup.rotation.y = (this.ROT_INC*(i + 1)) + this.ROT_INC/2;
             wall.position.set(0, WALL_HEIGHT/2, WALL_DEPTH/2);
             wallGroup.add(wall);
             parent.add(wallGroup);
@@ -65,9 +64,11 @@ class FTSEApp extends BaseApp {
                 block = new THREE.Mesh(geom, spindleMat);
                 block.position.copy(this.getBlockPosition(segment, i));
                 block.position.y += BLOCK_HEIGHT/2;
-                this.addToScene(block);
+                parent.add(block);
             }
         }
+
+        this.parentGroup = parent;
     }
 
     getBlockPosition(segment, position) {
@@ -85,7 +86,16 @@ class FTSEApp extends BaseApp {
         super.update();
         let delta = this.clock.getDelta();
         this.elapsedTime += delta;
+    }
 
+    previousSegment() {
+        //Move to previous segment
+        this.parentGroup.rotation.y -= this.ROT_INC/3;
+    }
+
+    nextSegment() {
+        //Move to next segment
+        this.parentGroup.rotation.y += this.ROT_INC/3;
     }
 }
 
@@ -96,6 +106,13 @@ $(document).ready( () => {
     //app.createGUI();
     app.createScene();
 
+    $('#previous').on("click", () => {
+        app.previousSegment();
+    });
+
+    $('#next').on("click", () => {
+        app.nextSegment();
+    });
 
     app.run();
 
