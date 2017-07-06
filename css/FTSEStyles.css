@@ -1,0 +1,32 @@
+/* Styles for FTSE visualisations */
+
+body {
+    margin: 0;
+    overflow: hidden;
+}
+.noDisplay {
+    display: none;
+}
+.centred {
+    text-align: center;
+}
+.infoPanel {
+    position: absolute;
+}
+.row.no-gutters {
+    margin-right: 0;
+    margin-left: 0;
+}
+.row.no-gutters > [class^="col-"],
+.row.no-gutters > [class*=" col-"] {
+    padding-right: 0;
+    padding-left: 0;
+}
+.indent {
+    margin: 0 1%;
+}
+#title {
+    top: 1%;
+    left: 40%;
+    width: 20%;
+}
