@@ -22,23 +22,61 @@ class FTSEApp extends BaseApp {
         const WALL_DEPTH = 120;
         const WALL_WIDTH = 5;
         const NUM_WALLS = 5;
+        this.WALL_RADIUS = WALL_DEPTH;
+        this.DIVS_PER_SEGMENT = 6;
         let ROT_INC = (Math.PI * 2)/NUM_WALLS;
+        this.DIV_ROT_INC = ROT_INC/this.DIVS_PER_SEGMENT;
+        this.SEG_OFFSET = 2;
 
-        //Main spindle
+            //Main spindle
+        let parent = new THREE.Object3D();
+        parent.rotation.y = ROT_INC/2;
         let geom = new THREE.CylinderBufferGeometry(CENTRE_RADIUS, CENTRE_RADIUS, CENTRE_HEIGHT, SEGMENTS);
-        let mat = new THREE.MeshLambertMaterial({color: 0xFFFB37});
-        let spindle = new THREE.Mesh(geom, mat);
-        this.addToScene(spindle);
+        let spindleMat = new THREE.MeshLambertMaterial({color: 0xFFFB37});
+        let spindle = new THREE.Mesh(geom, spindleMat);
+        parent.add(spindle);
+        this.addToScene(parent);
 
         //Walls
-        let i, wall, walls = [];
+        let i, wall, wallGroup;
+        const WALL_OPACITY = 0.25;
+        let wallMat = new THREE.MeshLambertMaterial({color: 0xffffff, transparent: true, opacity: WALL_OPACITY});
         geom = new THREE.BoxBufferGeometry(WALL_WIDTH, WALL_HEIGHT, WALL_DEPTH, SEGMENTS, SEGMENTS);
         for(i=0; i<NUM_WALLS; ++i) {
-            wall = new THREE.Mesh(geom, mat);
-            wall.rotation.y = ROT_INC*(i + 1);
-            walls.push(wall);
-            this.addToScene(walls[i]);
+            wall = new THREE.Mesh(geom, wallMat);
+            wallGroup = new THREE.Object3D();
+            wallGroup.rotation.y = ROT_INC*(i + 1);
+            wall.position.z = WALL_DEPTH/2;
+            wallGroup.add(wall);
+            parent.add(wallGroup);
         }
+
+        //Data blocks
+        const BLOCK_HEIGHT = 50;
+        const BLOCK_WIDTH_DEPTH = 7;
+        let block;
+        const NUM_SEGMENTS = 5;
+        const NUM_BLOCKS_PER_SEGMENT = 5;
+        geom = new THREE.BoxBufferGeometry(BLOCK_WIDTH_DEPTH, BLOCK_HEIGHT, BLOCK_WIDTH_DEPTH, SEGMENTS, SEGMENTS);
+        let segment;
+        for(segment=0; segment<NUM_SEGMENTS; ++segment) {
+            for(i=0; i<NUM_BLOCKS_PER_SEGMENT; ++i) {
+                block = new THREE.Mesh(geom, spindleMat);
+                block.position.copy(this.getBlockPosition(segment, i));
+                this.addToScene(block);
+            }
+        }
+    }
+
+    getBlockPosition(segment, position) {
+        //Get block number
+        let block = (segment * this.DIVS_PER_SEGMENT) - this.SEG_OFFSET;
+        block += position;
+        let rot = block * this.DIV_ROT_INC;
+        let posX = this.WALL_RADIUS * Math.sin(rot);
+        let posY = 0;
+        let posZ = this.WALL_RADIUS * Math.cos(rot);
+        return new THREE.Vector3(posX, posY, posZ);
     }
 
     update() {
