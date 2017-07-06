@@ -34,6 +34,7 @@ class FTSEApp extends BaseApp {
         let geom = new THREE.CylinderBufferGeometry(CENTRE_RADIUS, CENTRE_RADIUS, CENTRE_HEIGHT, SEGMENTS);
         let spindleMat = new THREE.MeshLambertMaterial({color: 0xFFFB37});
         let spindle = new THREE.Mesh(geom, spindleMat);
+        spindle.position.y += CENTRE_HEIGHT/2;
         parent.add(spindle);
         this.addToScene(parent);
 
@@ -46,7 +47,7 @@ class FTSEApp extends BaseApp {
             wall = new THREE.Mesh(geom, wallMat);
             wallGroup = new THREE.Object3D();
             wallGroup.rotation.y = ROT_INC*(i + 1);
-            wall.position.z = WALL_DEPTH/2;
+            wall.position.set(0, WALL_HEIGHT/2, WALL_DEPTH/2);
             wallGroup.add(wall);
             parent.add(wallGroup);
         }
@@ -63,6 +64,7 @@ class FTSEApp extends BaseApp {
             for(i=0; i<NUM_BLOCKS_PER_SEGMENT; ++i) {
                 block = new THREE.Mesh(geom, spindleMat);
                 block.position.copy(this.getBlockPosition(segment, i));
+                block.position.y += BLOCK_HEIGHT/2;
                 this.addToScene(block);
             }
         }
