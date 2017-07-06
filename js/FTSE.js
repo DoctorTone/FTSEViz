@@ -14,12 +14,31 @@ class FTSEApp extends BaseApp {
         //Init base createsScene
         super.createScene();
 
-        //DEBUG
-        let geom = new THREE.BoxGeometry(3, 3, 3);
-        let mat = new THREE.MeshLambertMaterial({color: 0xff0000});
-        let box = new THREE.Mesh(geom, mat);
+        //Set up main scene
+        const CENTRE_HEIGHT = 60;
+        const CENTRE_RADIUS = 5;
+        const SEGMENTS = 16;
+        const WALL_HEIGHT = 60;
+        const WALL_DEPTH = 120;
+        const WALL_WIDTH = 5;
+        const NUM_WALLS = 5;
+        let ROT_INC = (Math.PI * 2)/NUM_WALLS;
 
-        this.addToScene(box);
+        //Main spindle
+        let geom = new THREE.CylinderBufferGeometry(CENTRE_RADIUS, CENTRE_RADIUS, CENTRE_HEIGHT, SEGMENTS);
+        let mat = new THREE.MeshLambertMaterial({color: 0xFFFB37});
+        let spindle = new THREE.Mesh(geom, mat);
+        this.addToScene(spindle);
+
+        //Walls
+        let i, wall, walls = [];
+        geom = new THREE.BoxBufferGeometry(WALL_WIDTH, WALL_HEIGHT, WALL_DEPTH, SEGMENTS, SEGMENTS);
+        for(i=0; i<NUM_WALLS; ++i) {
+            wall = new THREE.Mesh(geom, mat);
+            wall.rotation.y = ROT_INC*(i + 1);
+            walls.push(wall);
+            this.addToScene(walls[i]);
+        }
     }
 
     update() {
