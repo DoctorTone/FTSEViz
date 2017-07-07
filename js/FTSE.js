@@ -27,44 +27,51 @@ class FTSEApp extends BaseApp {
         this.ROT_INC = (Math.PI * 2)/NUM_WALLS;
         this.DIV_ROT_INC = this.ROT_INC/this.DIVS_PER_SEGMENT;
         this.SEG_OFFSET = 2;
+        this.SCENE_ROTATE_TIME = 2;
+        this.sceneRotating = false;
+        this.sceneRotStart = 0;
+        this.sceneRotEnd = 0;
+        this.rotSpeed = 0;
+        this.rotationTime = 0;
 
         //Main spindle
         let parent = new THREE.Object3D();
-        let geom = new THREE.CylinderBufferGeometry(CENTRE_RADIUS, CENTRE_RADIUS, CENTRE_HEIGHT, SEGMENTS);
+        let cylinderGeom = new THREE.CylinderBufferGeometry(CENTRE_RADIUS, CENTRE_RADIUS, CENTRE_HEIGHT, SEGMENTS);
         let spindleMat = new THREE.MeshLambertMaterial({color: 0xFFFB37});
-        let spindle = new THREE.Mesh(geom, spindleMat);
+        let spindle = new THREE.Mesh(cylinderGeom, spindleMat);
         spindle.position.y += CENTRE_HEIGHT/2;
         parent.add(spindle);
         this.addToScene(parent);
 
         //Walls
-        let i, wall, wallGroup;
+        let i, wall, wallGroup, wallGroups = [];
         const WALL_OPACITY = 0.25;
         let wallMat = new THREE.MeshLambertMaterial({color: 0xffffff, transparent: true, opacity: WALL_OPACITY});
-        geom = new THREE.BoxBufferGeometry(WALL_WIDTH, WALL_HEIGHT, WALL_DEPTH, SEGMENTS, SEGMENTS);
+        let wallGeom = new THREE.BoxBufferGeometry(WALL_WIDTH, WALL_HEIGHT, WALL_DEPTH, SEGMENTS, SEGMENTS);
         for(i=0; i<NUM_WALLS; ++i) {
-            wall = new THREE.Mesh(geom, wallMat);
+            wall = new THREE.Mesh(wallGeom, wallMat);
             wallGroup = new THREE.Object3D();
             wallGroup.rotation.y = (this.ROT_INC*(i + 1)) + this.ROT_INC/2;
             wall.position.set(0, WALL_HEIGHT/2, WALL_DEPTH/2);
             wallGroup.add(wall);
+            wallGroups.push(wallGroup);
             parent.add(wallGroup);
         }
 
-        //Data blocks
-        const BLOCK_HEIGHT = 50;
-        const BLOCK_WIDTH_DEPTH = 7;
-        let block;
+        //Data columns
+        const COLUMN_HEIGHT = 50;
+        const COLUMN_RADIUS = 3;
+        let column;
         const NUM_SEGMENTS = 5;
-        const NUM_BLOCKS_PER_SEGMENT = 5;
-        geom = new THREE.BoxBufferGeometry(BLOCK_WIDTH_DEPTH, BLOCK_HEIGHT, BLOCK_WIDTH_DEPTH, SEGMENTS, SEGMENTS);
+        const NUM_COLUMNS_PER_SEGMENT = 5;
+        cylinderGeom = new THREE.CylinderBufferGeometry(COLUMN_RADIUS, COLUMN_RADIUS, COLUMN_HEIGHT, SEGMENTS, SEGMENTS);
         let segment;
         for(segment=0; segment<NUM_SEGMENTS; ++segment) {
-            for(i=0; i<NUM_BLOCKS_PER_SEGMENT; ++i) {
-                block = new THREE.Mesh(geom, spindleMat);
-                block.position.copy(this.getBlockPosition(segment, i));
-                block.position.y += BLOCK_HEIGHT/2;
-                parent.add(block);
+            for(i=0; i<NUM_COLUMNS_PER_SEGMENT; ++i) {
+                column = new THREE.Mesh(cylinderGeom, spindleMat);
+                column.position.copy(this.getBlockPosition(segment, i));
+                column.position.y += COLUMN_HEIGHT/2;
+                parent.add(column);
             }
         }
 
@@ -86,16 +93,30 @@ class FTSEApp extends BaseApp {
         super.update();
         let delta = this.clock.getDelta();
         this.elapsedTime += delta;
+
+        if(this.sceneRotating) {
+            this.rotationTime += delta;
+            this.parentGroup.rotation.y += (this.rotSpeed * delta);
+            if(this.rotationTime >= this.SCENE_ROTATE_TIME) {
+                this.parentGroup.rotation.y = this.sceneRotEnd;
+                this.rotationTime = 0;
+                this.sceneRotating = false;
+            }
+        }
     }
 
     previousSegment() {
         //Move to previous segment
-        this.parentGroup.rotation.y -= this.ROT_INC/3;
+        this.rotSpeed = -this.ROT_INC / this.SCENE_ROTATE_TIME;
+        this.sceneRotEnd = this.parentGroup.rotation.y - this.ROT_INC;
+        this.sceneRotating = true;
     }
 
     nextSegment() {
         //Move to next segment
-        this.parentGroup.rotation.y += this.ROT_INC/3;
+        this.rotSpeed = this.ROT_INC / this.SCENE_ROTATE_TIME;
+        this.sceneRotEnd = this.parentGroup.rotation.y + this.ROT_INC;
+        this.sceneRotating = true;
     }
 }
 
