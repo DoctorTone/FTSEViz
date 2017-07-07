@@ -14,6 +14,9 @@ class FTSEApp extends BaseApp {
         //Init base createsScene
         super.createScene();
 
+        //Add ground plane
+        this.addGround();
+
         //Set up main scene
         const CENTRE_HEIGHT = 60;
         const CENTRE_RADIUS = 5;
@@ -33,12 +36,16 @@ class FTSEApp extends BaseApp {
         this.sceneRotEnd = 0;
         this.rotSpeed = 0;
         this.rotationTime = 0;
+        this.BLOCKS_PER_SEGMENT = 5;
+        this.NUM_SEGMENTS = 5;
+        this.NUM_BLOCKS = this.NUM_SEGMENTS * this.BLOCKS_PER_SEGMENT;
 
         //Main spindle
         let parent = new THREE.Object3D();
         let cylinderGeom = new THREE.CylinderBufferGeometry(CENTRE_RADIUS, CENTRE_RADIUS, CENTRE_HEIGHT, SEGMENTS);
-        let spindleMat = new THREE.MeshLambertMaterial({color: 0xFFFB37});
-        let spindle = new THREE.Mesh(cylinderGeom, spindleMat);
+        this.spindleMat = new THREE.MeshLambertMaterial({color: 0xfffb37});
+        this.spindleMatDisabled = new THREE.MeshLambertMaterial({color: 0x909090});
+        let spindle = new THREE.Mesh(cylinderGeom, this.spindleMat);
         spindle.position.y += CENTRE_HEIGHT/2;
         parent.add(spindle);
         this.addToScene(parent);
@@ -66,16 +73,70 @@ class FTSEApp extends BaseApp {
         const NUM_COLUMNS_PER_SEGMENT = 5;
         cylinderGeom = new THREE.CylinderBufferGeometry(COLUMN_RADIUS, COLUMN_RADIUS, COLUMN_HEIGHT, SEGMENTS, SEGMENTS);
         let segment;
+        this.columns = [];
         for(segment=0; segment<NUM_SEGMENTS; ++segment) {
             for(i=0; i<NUM_COLUMNS_PER_SEGMENT; ++i) {
-                column = new THREE.Mesh(cylinderGeom, spindleMat);
+                column = new THREE.Mesh(cylinderGeom, this.spindleMat);
                 column.position.copy(this.getBlockPosition(segment, i));
                 column.position.y += COLUMN_HEIGHT/2;
                 parent.add(column);
+                this.columns.push(column);
             }
         }
 
         this.parentGroup = parent;
+
+        //Load in data
+        let dataLoad = new dataLoader();
+        dataLoad.load("data/ftseJan2009.json", data => {
+            this.data = data;
+            this.updateScene();
+        });
+    }
+
+    addGround() {
+        //Ground plane
+        const GROUND_WIDTH = 1000, GROUND_HEIGHT = 640, SEGMENTS = 16;
+        let groundGeom = new THREE.PlaneBufferGeometry(GROUND_WIDTH, GROUND_HEIGHT, SEGMENTS, SEGMENTS);
+        let groundMat = new THREE.MeshLambertMaterial( {color: 0x5286FF} );
+        let ground = new THREE.Mesh(groundGeom, groundMat);
+        ground.rotation.x = -Math.PI/2;
+        this.addToScene(ground);
+    }
+
+    updateScene() {
+        //Grey out unused blocks
+        let i, start = this.data.startSlot, end = this.data.endSlot;
+        if(start > 0) {
+            for(i=0; i<start; ++i) {
+                this.disableBlock(i);
+            }
+        }
+        if(end < (this.BLOCKS_PER_SEGMENT - 1)) {
+            let segment = 4;
+            for(i = segment * this.BLOCKS_PER_SEGMENT; i<this.NUM_BLOCKS; ++i) {
+                this.disableBlock(i);
+            }
+        }
+
+        let numShares = this.data.shares.length + start;
+        let currentPrice;
+        const CLOSE_PRICE = 2;
+        for(i=0; i<numShares; ++i) {
+            currentPrice = this.data.shares[i];
+            this.setSharePrice(i+start, currentPrice[CLOSE_PRICE]);
+        }
+    }
+
+    disableBlock(blockNumber) {
+        //Grey out given block number
+        this.columns[blockNumber].material = this.spindleMatDisabled;
+    }
+
+    setSharePrice(block, price) {
+        //Scale price to reasonable size
+        const SCALE_FACTOR = 1000;
+        this.columns[block].scale.set(1, price/SCALE_FACTOR, 1);
     }
 
     getBlockPosition(segment, position) {
@@ -107,6 +168,7 @@ class FTSEApp extends BaseApp {
 
     previousSegment() {
         //Move to previous segment
+        if(this.sceneRotating) return;
         this.rotSpeed = -this.ROT_INC / this.SCENE_ROTATE_TIME;
         this.sceneRotEnd = this.parentGroup.rotation.y - this.ROT_INC;
         this.sceneRotating = true;
@@ -114,6 +176,7 @@ class FTSEApp extends BaseApp {
 
     nextSegment() {
         //Move to next segment
+        if(this.sceneRotating) return;
         this.rotSpeed = this.ROT_INC / this.SCENE_ROTATE_TIME;
         this.sceneRotEnd = this.parentGroup.rotation.y + this.ROT_INC;
         this.sceneRotating = true;
