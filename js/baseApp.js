@@ -154,6 +154,10 @@ class BaseApp {
         this.scenes[this.currentScene].add(object);
     }
 
+    getObjectByName(name) {
+        return this.scenes[this.currentScene].getObjectByName(name);
+    }
+
     createCamera() {
         const CAM_X = 0, CAM_Y = 110, CAM_Z = 280;
         const NEAR_PLANE = 0.1, FAR_PLANE = 10000;

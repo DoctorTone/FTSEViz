@@ -94,12 +94,59 @@ class FTSEApp extends BaseApp {
         });
     }
 
+    createGUI() {
+        //Create GUI - controlKit
+        window.addEventListener('load', () => {
+            let appearanceConfig = {
+                Back: '#5c5f64',
+                Ground: '#0c245c',
+                Block: '#fffb37'
+            };
+
+            let controlKit = new ControlKit();
+
+            controlKit.addPanel({width: 250})
+                .addGroup({label: "Appearance", enable: false})
+                .addColor(appearanceConfig, "Back", {
+                    colorMode: "hex", onChange: () => {
+                        this.onBackgroundColourChanged(appearanceConfig.Back);
+                    }
+                })
+                .addColor(appearanceConfig, "Ground", {
+                    colorMode: "hex", onChange: () => {
+                        this.onGroundColourChanged(appearanceConfig.Ground);
+                    }
+                })
+                .addColor(appearanceConfig, "Block", {
+                    colorMode: "hex", onChange: () => {
+                        this.onBlockColourChanged(appearanceConfig.Block);
+                    }
+                })
+        });
+    }
+
+    onBackgroundColourChanged(colour) {
+        this.renderer.setClearColor(colour, 1.0);
+    }
+
+    onGroundColourChanged(colour) {
+        let ground = this.getObjectByName('Ground');
+        if(ground) {
+            ground.material.color.setStyle(colour);
+        }
+    }
+
+    onBlockColourChanged(colour) {
+        this.spindleMat.color.setStyle(colour);
+    }
+
     addGround() {
         //Ground plane
         const GROUND_WIDTH = 1000, GROUND_HEIGHT = 640, SEGMENTS = 16;
         let groundGeom = new THREE.PlaneBufferGeometry(GROUND_WIDTH, GROUND_HEIGHT, SEGMENTS, SEGMENTS);
-        let groundMat = new THREE.MeshLambertMaterial( {color: 0x5286FF} );
+        let groundMat = new THREE.MeshLambertMaterial( {color: 0x0c245c} );
         let ground = new THREE.Mesh(groundGeom, groundMat);
+        ground.name = "Ground";
         ground.rotation.x = -Math.PI/2;
         this.addToScene(ground);
     }
@@ -198,7 +245,7 @@ $(document).ready( () => {
     let container = document.getElementById("WebGL-output");
     let app = new FTSEApp();
     app.init(container);
-    //app.createGUI();
+    app.createGUI();
     app.createScene();
 
     $('#previous').on("click", () => {
