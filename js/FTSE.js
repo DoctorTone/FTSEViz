@@ -18,10 +18,10 @@ class FTSEApp extends BaseApp {
         this.addGround();
 
         //Set up main scene
-        const CENTRE_HEIGHT = 60;
+        const CENTRE_HEIGHT = 105;
         const CENTRE_RADIUS = 5;
         const SEGMENTS = 16;
-        const WALL_HEIGHT = 60;
+        const WALL_HEIGHT = 100;
         const WALL_DEPTH = 120;
         const WALL_WIDTH = 5;
         const NUM_WALLS = 5;
@@ -52,7 +52,7 @@ class FTSEApp extends BaseApp {
 
         //Walls
         let i, wall, wallGroup, wallGroups = [];
-        const WALL_OPACITY = 0.25;
+        const WALL_OPACITY = 0.55;
         let wallMat = new THREE.MeshLambertMaterial({color: 0xffffff, transparent: true, opacity: WALL_OPACITY});
         let wallGeom = new THREE.BoxBufferGeometry(WALL_WIDTH, WALL_HEIGHT, WALL_DEPTH, SEGMENTS, SEGMENTS);
         for(i=0; i<NUM_WALLS; ++i) {
@@ -66,7 +66,7 @@ class FTSEApp extends BaseApp {
         }
 
         //Data columns
-        const COLUMN_HEIGHT = 50;
+        const COLUMN_HEIGHT = 2;
         const COLUMN_RADIUS = 3;
         let column;
         const NUM_SEGMENTS = 5;
@@ -119,12 +119,24 @@ class FTSEApp extends BaseApp {
             }
         }
 
-        let numShares = this.data.shares.length + start;
-        let currentPrice;
+        //Normalise input
+        let numShares = this.data.shares.length;
+        let currentPrice, closingPrices = [];
         const CLOSE_PRICE = 2;
-        for(i=0; i<numShares; ++i) {
-            currentPrice = this.data.shares[i];
-            this.setSharePrice(i+start, currentPrice[CLOSE_PRICE]);
+        for(let share=0; share<numShares; ++share) {
+            currentPrice = this.data.shares[share];
+            closingPrices.push(currentPrice[CLOSE_PRICE]);
+        }
+        let max = Math.max(...closingPrices);
+        let min = Math.min(...closingPrices);
+        let delta = max - min;
+        //Normalise shares
+        for(let share=0; share<numShares; ++share) {
+            closingPrices[share] = (((closingPrices[share] - min)/delta)*100)+1;
+        }
+        let numSlots = numShares + start;
+        for(i=0; i<numSlots; ++i) {
+            this.setSharePrice(i+start, closingPrices[i]);
         }
     }
 
@@ -135,8 +147,7 @@ class FTSEApp extends BaseApp {
 
     setSharePrice(block, price) {
         //Scale price to reasonable size
-        const SCALE_FACTOR = 1000;
-        this.columns[block].scale.set(1, price/SCALE_FACTOR, 1);
+        this.columns[block].scale.set(1, price, 1);
     }
 
     getBlockPosition(segment, position) {
