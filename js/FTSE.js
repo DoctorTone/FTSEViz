@@ -88,8 +88,9 @@ class FTSEApp extends BaseApp {
 
         //Load in data
         let dataLoad = new dataLoader();
-        dataLoad.load("data/ftseJan2009.json", data => {
+        dataLoad.load("data/ftse2009.json", data => {
             this.data = data;
+            this.preProcessData();
             this.updateScene();
         });
     }
@@ -151,9 +152,41 @@ class FTSEApp extends BaseApp {
         this.addToScene(ground);
     }
 
+    preProcessData() {
+        //Normalise input
+        let monthlyPrices = [], dailyPrices = [];
+        let numShares;
+        let currentPrice;
+        const CLOSE_PRICE = 2;
+        for(let month=MONTHS.JANUARY; month<MONTHS.MARCH; ++month) {
+            numShares = this.data[month].shares.length;
+            for (let share = 0; share < numShares; ++share) {
+                currentPrice = this.data[month].shares[share];
+                dailyPrices.push(currentPrice[CLOSE_PRICE]);
+            }
+            monthlyPrices.push(dailyPrices);
+            dailyPrices = [];
+        }
+
+        let max, min, delta, shares;
+        for(let month=0, numMonths=monthlyPrices.length; month<numMonths; ++month) {
+            shares = monthlyPrices[month];
+            max = Math.max(...shares);
+            min = Math.min(...shares);
+            delta = max - min;
+            //Normalise shares
+            numShares = shares.length;
+            for(let share=0; share<numShares; ++share) {
+                shares[share] = (((shares[share] - min)/delta)*100)+1;
+            }
+        }
+        this.monthlyPrices = monthlyPrices;
+    }
+
     updateScene() {
-        //Grey out unused blocks
-        let i, start = this.data.startSlot, end = this.data.endSlot;
+        //Grey out unused blocks for each month
+        let month = MONTHS.FEBRUARY;
+        let i, start = this.data[month].startSlot, end = this.data[month].endSlot;
         if(start > 0) {
             for(i=0; i<start; ++i) {
                 this.disableBlock(i);
@@ -166,24 +199,11 @@ class FTSEApp extends BaseApp {
             }
         }
 
-        //Normalise input
-        let numShares = this.data.shares.length;
-        let currentPrice, closingPrices = [];
-        const CLOSE_PRICE = 2;
-        for(let share=0; share<numShares; ++share) {
-            currentPrice = this.data.shares[share];
-            closingPrices.push(currentPrice[CLOSE_PRICE]);
-        }
-        let max = Math.max(...closingPrices);
-        let min = Math.min(...closingPrices);
-        let delta = max - min;
-        //Normalise shares
-        for(let share=0; share<numShares; ++share) {
-            closingPrices[share] = (((closingPrices[share] - min)/delta)*100)+1;
-        }
+        let numShares = this.data[month].shares.length;
         let numSlots = numShares + start;
+        let dailyPrices = this.monthlyPrices[month];
         for(i=0; i<numSlots; ++i) {
-            this.setSharePrice(i+start, closingPrices[i]);
+            this.setSharePrice(i+start, dailyPrices[i]);
         }
     }
 
