@@ -22,6 +22,14 @@ body {
     padding-right: 0;
     padding-left: 0;
 }
+.btn-black {
+    color: #fff;
+    background-color: black;
+}
+.btn-dark {
+    color: #fff;
+    background-color: #545454;
+}
 .indent {
     margin: 0 1%;
 }
