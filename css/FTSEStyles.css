@@ -31,7 +31,11 @@ body {
     width: 30%;
     color: orange;
 }
-#rotControls {
+#monthControls {
+    bottom: 5%;
+    right: 1%;
+}
+#weekControls {
     bottom: 1%;
     right: 1%;
 }

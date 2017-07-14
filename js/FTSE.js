@@ -32,10 +32,16 @@ class FTSEApp extends BaseApp {
         this.SEG_OFFSET = 2;
         this.SCENE_ROTATE_TIME = 2;
         this.sceneRotating = false;
+        this.sceneMoving = false;
         this.sceneRotStart = 0;
         this.sceneRotEnd = 0;
         this.rotSpeed = 0;
         this.rotationTime = 0;
+        this.moveTime = 0;
+        this.moveSpeed = 0;
+        this.MOVE_INC = -110;
+        this.SCENE_MOVE_TIME = 2;
+        this.sceneMoveEnd = 0;
         this.BLOCKS_PER_SEGMENT = 5;
         this.NUM_SEGMENTS = 5;
         this.NUM_BLOCKS = this.NUM_SEGMENTS * this.BLOCKS_PER_SEGMENT;
@@ -242,6 +248,22 @@ class FTSEApp extends BaseApp {
                 this.sceneRotating = false;
             }
         }
+
+        if(this.sceneMoving) {
+            this.moveTime += delta;
+            this.parentGroup.position.y += (this.moveSpeed * delta);
+            if(this.moveTime >= this.SCENE_MOVE_TIME) {
+                this.parentGroup.position.y = this.sceneMoveEnd;
+                this.moveTime = 0;
+                if(this.MOVE_INC < 0) {
+                    this.sceneMoveEnd = 0;
+                } else {
+                    this.sceneMoving = false;
+                }
+                this.MOVE_INC *= -1;
+                this.moveSpeed = this.MOVE_INC / this.SCENE_MOVE_TIME;
+            }
+        }
     }
 
     previousSegment() {
@@ -259,6 +281,14 @@ class FTSEApp extends BaseApp {
         this.sceneRotEnd = this.parentGroup.rotation.y + this.ROT_INC;
         this.sceneRotating = true;
     }
+
+    nextMonth() {
+        //Animate to show next month
+        if(this.sceneMoving) return;
+        this.moveSpeed = this.MOVE_INC / this.SCENE_MOVE_TIME;
+        this.sceneMoveEnd = this.parentGroup.position.y + this.MOVE_INC;
+        this.sceneMoving = true;
+    }
 }
 
 $(document).ready( () => {
@@ -268,11 +298,15 @@ $(document).ready( () => {
     app.createGUI();
     app.createScene();
 
-    $('#previous').on("click", () => {
+    $('#nextMonth').on("click", () => {
+        app.nextMonth();
+    });
+
+    $('#previousWeek').on("click", () => {
         app.previousSegment();
     });
 
-    $('#next').on("click", () => {
+    $('#nextWeek').on("click", () => {
         app.nextSegment();
     });
 
