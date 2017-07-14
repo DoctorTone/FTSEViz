@@ -46,6 +46,9 @@ class FTSEApp extends BaseApp {
         this.NUM_SEGMENTS = 5;
         this.NUM_BLOCKS = this.NUM_SEGMENTS * this.BLOCKS_PER_SEGMENT;
 
+        this.currentMonth = MONTHS.JANUARY;
+        this.currentWeek = 0;
+
         //Main spindle
         let parent = new THREE.Object3D();
         let cylinderGeom = new THREE.CylinderBufferGeometry(CENTRE_RADIUS, CENTRE_RADIUS, CENTRE_HEIGHT, SEGMENTS);
@@ -190,8 +193,13 @@ class FTSEApp extends BaseApp {
     }
 
     updateScene() {
+        //Update info
+        let month = this.currentMonth;
+        $('#year').html(this.data[month].year);
+        $('#month').html(this.data[month].month);
+
         //Grey out unused blocks for each month
-        let month = MONTHS.FEBRUARY;
+        this.clearBlocks();
         let i, start = this.data[month].startSlot, end = this.data[month].endSlot;
         if(start > 0) {
             for(i=0; i<start; ++i) {
@@ -208,8 +216,16 @@ class FTSEApp extends BaseApp {
         let numShares = this.data[month].shares.length;
         let numSlots = numShares + start;
         let dailyPrices = this.monthlyPrices[month];
-        for(i=0; i<numSlots; ++i) {
-            this.setSharePrice(i+start, dailyPrices[i]);
+        for(i=start; i<numSlots; ++i) {
+            this.setSharePrice(i, dailyPrices[i-start]);
+        }
+    }
+
+    clearBlocks() {
+        //Set all materials and scales for blocks
+        for(let block=0, numBlocks=this.columns.length; block<numBlocks; ++block) {
+            this.columns[block].material = this.spindleMat;
+            this.columns[block].scale.set(1, 1, 1);
         }
     }
 
@@ -257,6 +273,7 @@ class FTSEApp extends BaseApp {
                 this.moveTime = 0;
                 if(this.MOVE_INC < 0) {
                     this.sceneMoveEnd = 0;
+                    this.updateScene();
                 } else {
                     this.sceneMoving = false;
                 }
@@ -269,25 +286,47 @@ class FTSEApp extends BaseApp {
     previousSegment() {
         //Move to previous segment
         if(this.sceneRotating) return;
-        this.rotSpeed = -this.ROT_INC / this.SCENE_ROTATE_TIME;
-        this.sceneRotEnd = this.parentGroup.rotation.y - this.ROT_INC;
+        if(--this.currentWeek < 0) this.currentWeek = DATES.WEEKS_PER_MONTH;
+        this.rotSpeed = this.ROT_INC / this.SCENE_ROTATE_TIME;
+        this.sceneRotEnd = this.parentGroup.rotation.y + this.ROT_INC;
         this.sceneRotating = true;
+
+        let showWeek = this.currentWeek + 1;
+        $('#week').html(showWeek);
     }
 
     nextSegment() {
         //Move to next segment
         if(this.sceneRotating) return;
-        this.rotSpeed = this.ROT_INC / this.SCENE_ROTATE_TIME;
-        this.sceneRotEnd = this.parentGroup.rotation.y + this.ROT_INC;
+        if(++this.currentWeek > DATES.WEEKS_PER_MONTH) this.currentWeek = 0;
+        this.rotSpeed = -this.ROT_INC / this.SCENE_ROTATE_TIME;
+        this.sceneRotEnd = this.parentGroup.rotation.y - this.ROT_INC;
         this.sceneRotating = true;
+
+        let showWeek = this.currentWeek + 1;
+        $('#week').html(showWeek);
     }
 
     nextMonth() {
         //Animate to show next month
         if(this.sceneMoving) return;
+        if(this.currentMonth === MONTHS.FEBRUARY) return;
+
         this.moveSpeed = this.MOVE_INC / this.SCENE_MOVE_TIME;
         this.sceneMoveEnd = this.parentGroup.position.y + this.MOVE_INC;
         this.sceneMoving = true;
+        ++this.currentMonth;
+    }
+
+    previousMonth() {
+        //Animate to show next month
+        if(this.sceneMoving) return;
+        if(this.currentMonth === MONTHS.JANUARY) return;
+
+        this.moveSpeed = this.MOVE_INC / this.SCENE_MOVE_TIME;
+        this.sceneMoveEnd = this.parentGroup.position.y + this.MOVE_INC;
+        this.sceneMoving = true;
+        --this.currentMonth;
     }
 }
 
@@ -300,6 +339,10 @@ $(document).ready( () => {
 
     $('#nextMonth').on("click", () => {
         app.nextMonth();
+    });
+
+    $('#previousMonth').on("click", () => {
+        app.previousMonth();
     });
 
     $('#previousWeek').on("click", () => {

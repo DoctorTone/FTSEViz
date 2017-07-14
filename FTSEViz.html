@@ -13,10 +13,10 @@
     <script type="text/javascript" src="js/TrackballControls.js"></script>
     <script type="text/javascript" src="js/bootstrap.min.js"></script>
     <script type="text/javascript" src="js/baseApp.js?v=0.8"></script>
-    <script type="text/javascript" src="js/dates.js"></script>
+    <script type="text/javascript" src="js/dates.js?v=0.1"></script>
     <script type="text/javascript" src="js/dataLoader.js"></script>
     <script type="text/javascript" src="js/controlKit.min.js?v=0.1"></script>
-    <script type="text/javascript" src="js/FTSE.js?v=0.7"></script>
+    <script type="text/javascript" src="js/FTSE.js?v=0.8"></script>
 
 </head>
 <body>
@@ -30,19 +30,20 @@
     </div>
 
     <div id="monthControls" class="infoPanel">
-        <button id="nextMonth" type="button" class="btn btn-primary"><</button>
-        <button id="previousMonth" type="button" class="btn btn-primary">></button>
+        <button id="previousMonth" type="button" class="btn btn-primary"><</button>
+        <button id="nextMonth" type="button" class="btn btn-primary">></button>
     </div>
 
     <div id="weekControls" class="infoPanel">
-        <button id="nextWeek" type="button" class="btn btn-primary"><</button>
-        <button id="previousWeek" type="button" class="btn btn-primary">></button>
+        <button id="previousWeek" type="button" class="btn btn-primary"><</button>
+        <button id="nextWeek" type="button" class="btn btn-primary">></button>
     </div>
 
     <div id="info" class="infoPanel">
-        <p>Year: 2009</p>
-        <p>Month: January</p>
-        <p>Week: 1</p>
+        <p>Year: <span id="year"></span></p>
+        <p>Month: <span id="month"></span></p>
+        <p>Week: <span id="week">1</span></p>
+        <p>Normalised</p>
     </div>
 </body>
 </html>

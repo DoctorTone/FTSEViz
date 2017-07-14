@@ -9,3 +9,7 @@ let MONTHS = {
     FEBRUARY: 1,
     MARCH: 2
 };
+
+let DATES = {
+    WEEKS_PER_MONTH: 4
+};
