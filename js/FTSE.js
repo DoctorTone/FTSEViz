@@ -97,7 +97,7 @@ class FTSEApp extends BaseApp {
 
         //Load in data
         let dataLoad = new dataLoader();
-        dataLoad.load("data/ftse2009.json", data => {
+        dataLoad.load("data/ftse100_2016.json", data => {
             this.data = data;
             this.preProcessData();
             this.updateScene();
@@ -167,7 +167,7 @@ class FTSEApp extends BaseApp {
         let numShares;
         let currentPrice;
         const CLOSE_PRICE = 2;
-        for(let month=MONTHS.JANUARY; month<MONTHS.MARCH; ++month) {
+        for(let month=MONTHS.JANUARY; month<=MONTHS.DECEMBER; ++month) {
             numShares = this.data[month].shares.length;
             for (let share = 0; share < numShares; ++share) {
                 currentPrice = this.data[month].shares[share];
@@ -207,8 +207,8 @@ class FTSEApp extends BaseApp {
             }
         }
         if(end < (this.BLOCKS_PER_SEGMENT - 1)) {
-            let segment = 4;
-            for(i = segment * this.BLOCKS_PER_SEGMENT; i<this.NUM_BLOCKS; ++i) {
+            let segment = 4 * this.BLOCKS_PER_SEGMENT;
+            for(i = segment + end + 1; i<this.NUM_BLOCKS; ++i) {
                 this.disableBlock(i);
             }
         }
@@ -310,23 +310,23 @@ class FTSEApp extends BaseApp {
     nextMonth() {
         //Animate to show next month
         if(this.sceneMoving) return;
-        if(this.currentMonth === MONTHS.FEBRUARY) return;
 
         this.moveSpeed = this.MOVE_INC / this.SCENE_MOVE_TIME;
         this.sceneMoveEnd = this.parentGroup.position.y + this.MOVE_INC;
         this.sceneMoving = true;
         ++this.currentMonth;
+        if(this.currentMonth > MONTHS.DECEMBER) this.currentMonth = MONTHS.JANUARY;
     }
 
     previousMonth() {
         //Animate to show next month
         if(this.sceneMoving) return;
-        if(this.currentMonth === MONTHS.JANUARY) return;
 
         this.moveSpeed = this.MOVE_INC / this.SCENE_MOVE_TIME;
         this.sceneMoveEnd = this.parentGroup.position.y + this.MOVE_INC;
         this.sceneMoving = true;
         --this.currentMonth;
+        if(this.currentMonth < MONTHS.JANUARY) this.currentMonth = MONTHS.DECEMBER;
     }
 }
 
