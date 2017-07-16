@@ -13,10 +13,11 @@
     <script type="text/javascript" src="js/TrackballControls.js"></script>
     <script type="text/javascript" src="js/bootstrap.min.js"></script>
     <script type="text/javascript" src="js/baseApp.js?v=0.8"></script>
+    <script type="text/javascript" src="js/sceneConfig.js?v=0.1"></script>
     <script type="text/javascript" src="js/dates.js?v=0.2"></script>
     <script type="text/javascript" src="js/dataLoader.js"></script>
     <script type="text/javascript" src="js/controlKit.min.js?v=0.1"></script>
-    <script type="text/javascript" src="js/FTSE.js?v=0.9"></script>
+    <script type="text/javascript" src="js/FTSE.js?v=0.10"></script>
 
 </head>
 <body>
@@ -33,7 +34,7 @@
         <p>Month</p>
         <div id="monthControls">
             <button id="previousMonth" type="button" class="btn btn-primary"><</button>
-            <button id="nextMonth" type="button" class="btn btn-black">></button>
+            <button id="nextMonth" type="button" class="btn btn-primary">></button>
         </div>
 
         <p>Week</p>
@@ -44,7 +45,8 @@
     </div>
 
 
-    <div id="info" class="infoPanel">
+    <div id="info" class="infoPanel centred">
+        Info
         <p>Year: <span id="year"></span></p>
         <p>Month: <span id="month"></span></p>
         <p>Week: <span id="week">1</span></p>

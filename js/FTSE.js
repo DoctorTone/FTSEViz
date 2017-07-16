@@ -18,13 +18,6 @@ class FTSEApp extends BaseApp {
         this.addGround();
 
         //Set up main scene
-        const CENTRE_HEIGHT = 105;
-        const CENTRE_RADIUS = 5;
-        const SEGMENTS = 16;
-        const WALL_HEIGHT = 100;
-        const WALL_DEPTH = 120;
-        const WALL_WIDTH = 5;
-        const NUM_WALLS = 5;
         this.WALL_RADIUS = WALL_DEPTH;
         this.DIVS_PER_SEGMENT = 6;
         this.ROT_INC = (Math.PI * 2)/NUM_WALLS;
@@ -38,6 +31,7 @@ class FTSEApp extends BaseApp {
         this.rotSpeed = 0;
         this.rotationTime = 0;
         this.moveTime = 0;
+        this.animate = true;
         this.moveSpeed = 0;
         this.MOVE_INC = -110;
         this.SCENE_MOVE_TIME = 2;
@@ -112,24 +106,33 @@ class FTSEApp extends BaseApp {
                 Ground: '#0c245c',
                 Block: '#fffb37'
             };
+            let settingsConfig = {
+              Animate: true
+            };
 
             let controlKit = new ControlKit();
 
-            controlKit.addPanel({width: 250})
+            controlKit.addPanel({width: 200})
                 .addGroup({label: "Appearance", enable: false})
-                .addColor(appearanceConfig, "Back", {
-                    colorMode: "hex", onChange: () => {
-                        this.onBackgroundColourChanged(appearanceConfig.Back);
-                    }
-                })
-                .addColor(appearanceConfig, "Ground", {
-                    colorMode: "hex", onChange: () => {
-                        this.onGroundColourChanged(appearanceConfig.Ground);
-                    }
-                })
-                .addColor(appearanceConfig, "Block", {
-                    colorMode: "hex", onChange: () => {
-                        this.onBlockColourChanged(appearanceConfig.Block);
+                    .addColor(appearanceConfig, "Back", {
+                        colorMode: "hex", onChange: () => {
+                            this.onBackgroundColourChanged(appearanceConfig.Back);
+                        }
+                    })
+                    .addColor(appearanceConfig, "Ground", {
+                        colorMode: "hex", onChange: () => {
+                            this.onGroundColourChanged(appearanceConfig.Ground);
+                        }
+                    })
+                    .addColor(appearanceConfig, "Block", {
+                        colorMode: "hex", onChange: () => {
+                            this.onBlockColourChanged(appearanceConfig.Block);
+                        }
+                    })
+                .addGroup( {label: "Settings", enable: false})
+                .addCheckbox(settingsConfig, "Animate", {
+                    onChange: () => {
+                        this.toggleAnimation();
                     }
                 })
         });
@@ -148,6 +151,10 @@ class FTSEApp extends BaseApp {
 
     onBlockColourChanged(colour) {
         this.spindleMat.color.setStyle(colour);
+    }
+
+    toggleAnimation() {
+        this.animate = !this.animate;
     }
 
     addGround() {
@@ -256,6 +263,7 @@ class FTSEApp extends BaseApp {
         this.elapsedTime += delta;
 
         if(this.sceneRotating) {
+            if(!this.animate) this.rotationTime = this.SCENE_ROTATE_TIME;
             this.rotationTime += delta;
             this.parentGroup.rotation.y += (this.rotSpeed * delta);
             if(this.rotationTime >= this.SCENE_ROTATE_TIME) {
@@ -266,6 +274,7 @@ class FTSEApp extends BaseApp {
         }
 
         if(this.sceneMoving) {
+            if(!this.animate) this.moveTime = this.SCENE_ROTATE_TIME;
             this.moveTime += delta;
             this.parentGroup.position.y += (this.moveSpeed * delta);
             if(this.moveTime >= this.SCENE_MOVE_TIME) {

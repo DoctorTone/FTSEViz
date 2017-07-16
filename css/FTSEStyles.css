@@ -56,7 +56,13 @@ body {
     width: 12.5%;
     font-size: 1.3vw;
     color: orange;
+    background-color: #363636;
     border: solid orange 2px;
     border-radius: 5px;
     padding: 0.5% 1%;
+}
+#info p {
+    background-color: black;
+    border-radius: 5px;
+    padding: 0 5px;
 }
