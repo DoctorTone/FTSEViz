@@ -61,6 +61,10 @@ class BaseApp {
         window.addEventListener('resize', event => {
             this.windowResize(event);
         }, false);
+
+        document.addEventListener("mousemove", event => {
+            this.mouseMoved(event);
+        }, false);
     }
 
     keyDown(event) {
@@ -109,8 +113,9 @@ class BaseApp {
 
     mouseMoved(event) {
         //Update mouse state
-        this.mouse.endX = event.clientX;
-        this.mouse.endY = event.clientY;
+        event.preventDefault();
+        this.mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
+        this.mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
     }
 
     windowResize(event) {
@@ -207,8 +212,10 @@ class BaseApp {
     }
 
     run() {
-        this.renderer.render( this.scenes[this.currentScene], this.camera );
+        this.raycaster.setFromCamera( this.mouse, this.camera );
+        this.hoverObjects = this.raycaster.intersectObjects(this.parentGroup.children);
         this.update();
+        this.renderer.render( this.scenes[this.currentScene], this.camera );
         if(this.stats) this.stats.update();
         requestAnimationFrame(() => {
             this.run();

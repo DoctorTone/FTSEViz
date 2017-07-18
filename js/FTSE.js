@@ -77,11 +77,14 @@ class FTSEApp extends BaseApp {
         cylinderGeom = new THREE.CylinderBufferGeometry(COLUMN_RADIUS, COLUMN_RADIUS, COLUMN_HEIGHT, SEGMENTS, SEGMENTS);
         let segment;
         this.columns = [];
+        let blockNum = 0;
         for(segment=0; segment<NUM_SEGMENTS; ++segment) {
             for(i=0; i<NUM_COLUMNS_PER_SEGMENT; ++i) {
                 column = new THREE.Mesh(cylinderGeom, this.spindleMat);
                 column.position.copy(this.getBlockPosition(segment, i));
                 column.position.y += COLUMN_HEIGHT/2;
+                column.name = "block" + blockNum;
+                ++blockNum;
                 parent.add(column);
                 this.columns.push(column);
             }
@@ -184,16 +187,21 @@ class FTSEApp extends BaseApp {
             dailyPrices = [];
         }
 
-        let max, min, delta, shares;
+        let max, min, delta, shares, largest = -1, smallest = 1000000;
         for(let month=0, numMonths=monthlyPrices.length; month<numMonths; ++month) {
             shares = monthlyPrices[month];
             max = Math.max(...shares);
             min = Math.min(...shares);
-            delta = max - min;
-            //Normalise shares
+            if(max > largest) largest = max;
+            if(min < smallest) smallest = min;
+        }
+        //Normalise shares
+        delta = largest - smallest;
+        for(let month=0, numMonths=monthlyPrices.length; month<numMonths; ++month) {
+            shares = monthlyPrices[month];
             numShares = shares.length;
             for(let share=0; share<numShares; ++share) {
-                shares[share] = (((shares[share] - min)/delta)*100)+1;
+                shares[share] = (((shares[share] - smallest)/delta)*100)+1;
             }
         }
         this.monthlyPrices = monthlyPrices;
@@ -289,6 +297,10 @@ class FTSEApp extends BaseApp {
                 this.MOVE_INC *= -1;
                 this.moveSpeed = this.MOVE_INC / this.SCENE_MOVE_TIME;
             }
+        }
+
+        if(this.hoverObjects.length) {
+            console.log("Hovered over ", this.hoverObjects[0].object.name);
         }
     }
 
