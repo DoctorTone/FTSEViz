@@ -69,7 +69,7 @@ class FTSEApp extends BaseApp {
         }
 
         //Data columns
-        const COLUMN_HEIGHT = 2;
+        const COLUMN_HEIGHT = 1;
         const COLUMN_RADIUS = 3;
         let column;
         const NUM_SEGMENTS = 5;
@@ -91,6 +91,15 @@ class FTSEApp extends BaseApp {
         }
 
         this.parentGroup = parent;
+
+        //DEBUG
+        //Simple label
+        this.labelManager = new LabelManager();
+        let position = new THREE.Vector3();
+        position.copy(this.columns[2].position);
+        let scale = new THREE.Vector3(50, 50, 1);
+        let label = this.labelManager.create("6047.3", 20, undefined, position, scale, 32, 1.0, false);
+        this.addToScene(label);
 
         //Load in data
         let dataLoad = new dataLoader();
@@ -251,7 +260,9 @@ class FTSEApp extends BaseApp {
 
     setSharePrice(block, price) {
         //Scale price to reasonable size
-        this.columns[block].scale.set(1, price, 1);
+        let currentBlock = this.columns[block];
+        currentBlock.scale.set(1, price, 1);
+        currentBlock.position.y += (price/2);
     }
 
     getBlockPosition(segment, position) {
@@ -299,8 +310,13 @@ class FTSEApp extends BaseApp {
             }
         }
 
+        this.labelManager.getLabel("6047.3").visible = false;
         if(this.hoverObjects.length) {
             console.log("Hovered over ", this.hoverObjects[0].object.name);
+            this.currentLabel = this.labelManager.getLabel("6047.3");
+            this.currentLabel.position.copy(this.hoverObjects[0].object.position);
+            this.currentLabel.position.y *=1.85;
+            this.currentLabel.visible = true;
         }
     }
 
