@@ -38,6 +38,7 @@ class FTSEApp extends BaseApp {
         this.BLOCKS_PER_SEGMENT = 5;
         this.NUM_SEGMENTS = 5;
         this.NUM_BLOCKS = this.NUM_SEGMENTS * this.BLOCKS_PER_SEGMENT;
+        this.currentLabel = undefined;
 
         this.currentMonth = MONTHS.JANUARY;
         this.currentWeek = 0;
@@ -96,8 +97,9 @@ class FTSEApp extends BaseApp {
         this.labelManager = new LabelManager();
         let position = new THREE.Vector3();
         position.copy(this.columns[2].position);
-        let label = this.labelManager.create("priceLabel", "6047.3", position);
+        let label = this.labelManager.create("priceLabel", "Tony", position);
         this.addToScene(label.getSprite());
+        this.currentLabel = label;
 
         //Load in data
         let dataLoad = new dataLoader();
@@ -181,6 +183,7 @@ class FTSEApp extends BaseApp {
     preProcessData() {
         //Normalise input
         let monthlyPrices = [], dailyPrices = [];
+        let realMonthlyPrices = [], realDailyPrices = [];
         let numShares;
         let currentPrice;
         const CLOSE_PRICE = 2;
@@ -189,9 +192,12 @@ class FTSEApp extends BaseApp {
             for (let share = 0; share < numShares; ++share) {
                 currentPrice = this.data[month].shares[share];
                 dailyPrices.push(currentPrice[CLOSE_PRICE]);
+                realDailyPrices.push(currentPrice[CLOSE_PRICE]);
             }
             monthlyPrices.push(dailyPrices);
+            realMonthlyPrices.push(realDailyPrices);
             dailyPrices = [];
+            realDailyPrices = [];
         }
 
         let max, min, delta, shares, largest = -1, smallest = 1000000;
@@ -212,6 +218,7 @@ class FTSEApp extends BaseApp {
             }
         }
         this.monthlyPrices = monthlyPrices;
+        this.realMonthlyPrices = realMonthlyPrices;
     }
 
     updateScene() {
@@ -263,6 +270,11 @@ class FTSEApp extends BaseApp {
         currentBlock.position.y = price/2;
     }
 
+    getShareText(block) {
+        let dailyPrices = this.realMonthlyPrices[this.currentMonth];
+        return dailyPrices[block];
+    }
+
     getBlockPosition(segment, position) {
         //Get block number
         let block = (segment * this.DIVS_PER_SEGMENT) - this.SEG_OFFSET;
@@ -308,16 +320,23 @@ class FTSEApp extends BaseApp {
             }
         }
 
-        this.labelManager.getLabel("priceLabel").setVisibility(false);
+        this.currentLabel.setVisibility(false);
         if(this.hoverObjects.length) {
             //DEBUG
-            //console.log("Hovered over ", this.hoverObjects[0].object.name);
-            this.currentLabel = this.labelManager.getLabel("priceLabel");
-            //this.currentLabel.position.setFromMatrixPosition(this.hoverObjects[0].object.matrixWorld);
+            let text = this.hoverObjects[0].object.name;
+            console.log("Hovered over ", text);
+
+            if(text.indexOf("block") < 0) return;
+
+            let index = text.match(/\d+$/);
+            if(!index) return;
+
+            text = this.getShareText(index[0]);
+            if(!text) text = "n/a";
             this.currentLabel.setWorldPosition(this.hoverObjects[0].object.matrixWorld);
             this.currentLabel.updateY(1.85);
             this.currentLabel.setVisibility(true);
-            this.currentLabel.setText("Tony");
+            this.currentLabel.setText(text);
         }
     }
 
