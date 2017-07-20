@@ -63,6 +63,8 @@ class Label {
         //var offset = (canvas.width - textWidth) / 80;
         this.sprite.position.copy(position);
         this.sprite.scale.copy(labelProperties.scale);
+
+        this.labelProperties = labelProperties;
     }
 
     getSprite() {
@@ -79,5 +81,14 @@ class Label {
 
     updateY(yScale) {
         this.sprite.position.y *= yScale;
+    }
+
+    setText(text) {
+        this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        let metrics = this.context.measureText( text );
+        let textWidth = metrics.width;
+        let offset = (this.canvas.width - (textWidth + this.labelProperties.borderThickness))/2;
+        this.context.fillText( text, this.labelProperties.borderThickness + offset, this.labelProperties.fontSize+30 +
+            this.labelProperties.borderThickness);
     }
 }

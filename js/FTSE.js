@@ -317,6 +317,7 @@ class FTSEApp extends BaseApp {
             this.currentLabel.setWorldPosition(this.hoverObjects[0].object.matrixWorld);
             this.currentLabel.updateY(1.85);
             this.currentLabel.setVisibility(true);
+            this.currentLabel.setText("Tony");
         }
     }
 
