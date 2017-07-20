@@ -7,7 +7,6 @@
 class FTSEApp extends BaseApp {
     constructor() {
         super();
-
     }
 
     createScene() {
@@ -262,7 +261,7 @@ class FTSEApp extends BaseApp {
         //Scale price to reasonable size
         let currentBlock = this.columns[block];
         currentBlock.scale.set(1, price, 1);
-        currentBlock.position.y += (price/2);
+        currentBlock.position.y = price/2;
     }
 
     getBlockPosition(segment, position) {
@@ -314,7 +313,7 @@ class FTSEApp extends BaseApp {
         if(this.hoverObjects.length) {
             console.log("Hovered over ", this.hoverObjects[0].object.name);
             this.currentLabel = this.labelManager.getLabel("6047.3");
-            this.currentLabel.position.copy(this.hoverObjects[0].object.position);
+            this.currentLabel.position.setFromMatrixPosition(this.hoverObjects[0].object.matrixWorld);
             this.currentLabel.position.y *=1.85;
             this.currentLabel.visible = true;
         }
