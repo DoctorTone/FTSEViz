@@ -213,7 +213,7 @@ class BaseApp {
 
     run() {
         this.raycaster.setFromCamera( this.mouse, this.camera );
-        this.hoverObjects = this.raycaster.intersectObjects(this.parentGroup.children);
+        this.hoverObjects = this.raycaster.intersectObjects(this.parentGroupDaily.children);
         this.update();
         this.renderer.render( this.scenes[this.currentScene], this.camera );
         if(this.stats) this.stats.update();
