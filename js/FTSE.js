@@ -489,8 +489,14 @@ class FTSEApp extends BaseApp {
     changeViews() {
         let text = this.weeklyView ? "Daily" : "Weekly";
         $('#toggleView').html(text);
-        let elem = $('#weekControls');
-        this.weeklyView ? elem.show() : elem.hide();
+        let weekControls = $('#weekControls');
+        let weekInfo = $('#weekData');
+        weekControls.hide();
+        weekInfo.hide();
+        if(this.weeklyView) {
+            weekControls.show();
+            weekInfo.show();
+        }
     }
 
     moveToView() {

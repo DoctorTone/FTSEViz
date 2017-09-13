@@ -51,18 +51,18 @@ body {
     color: white;
 }
 #info {
-    top: 5%;
-    left: 2.5%;
-    width: 12.5%;
+    top: 1.5%;
+    left: 1%;
+    width: 15%;
     font-size: 1.3vw;
     color: orange;
     background-color: #363636;
     border: solid orange 2px;
-    border-radius: 5px;
+    border-radius: 35px;
     padding: 0.5% 1%;
 }
 #info p {
     background-color: black;
-    border-radius: 5px;
+    border-radius: 20px;
     padding: 0 5px;
 }
