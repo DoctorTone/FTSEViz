@@ -109,11 +109,12 @@ class FTSEApp extends BaseApp {
         this.addBlocks(blockInfo, this.weeklyColumns);
 
         //Simple label
-        this.labelManager = new LabelManager();
+        this.labelManager = new SpriteManager();
         let position = new THREE.Vector3();
         position.copy(this.columns[2].position);
-        let label = this.labelManager.create("priceLabel", "Tony", position);
-        this.addToScene(label.getSprite());
+        let scale = new THREE.Vector3(50, 50, 1);
+        let label = this.labelManager.create("Tony", position, scale, 32, 1, false, false);
+        this.addToScene(label);
         this.currentLabel = label;
 
         //Load in data
@@ -415,7 +416,7 @@ class FTSEApp extends BaseApp {
             }
         }
 
-        this.currentLabel.setVisibility(false);
+        this.currentLabel.visible = true;
         if(this.hoverObjects.length) {
             let text = this.hoverObjects[0].object.name;
             //DEBUG
@@ -428,10 +429,11 @@ class FTSEApp extends BaseApp {
 
             text = this.getShareText(index[0]);
             if(!text) text = "n/a";
-            this.currentLabel.setWorldPosition(this.hoverObjects[0].object.matrixWorld);
-            this.currentLabel.updateY(1.85);
-            this.currentLabel.setVisibility(true);
-            this.currentLabel.setText(text);
+            this.currentLabel.position.setFromMatrixPosition(this.hoverObjects[0].object.matrixWorld);
+            this.currentLabel.position.y *= 1.85;
+            this.currentLabel.visible = true;
+            //DEBUG
+            //this.currentLabel.setText(text);
         }
     }
 
