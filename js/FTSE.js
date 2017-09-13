@@ -410,8 +410,7 @@ class FTSEApp extends BaseApp {
                 this.root.position.x = this.sceneMoveEnd;
                 this.moveTime = 0;
                 this.viewMoving = false;
-                let text = this.weeklyView ? "Daily" : "Weekly";
-                $('#toggleView').html(text);
+                this.changeViews();
             }
         }
 
@@ -485,6 +484,13 @@ class FTSEApp extends BaseApp {
         this.weeklyView = !this.weeklyView;
         this.viewMoving = true;
         this.moveToView();
+    }
+
+    changeViews() {
+        let text = this.weeklyView ? "Daily" : "Weekly";
+        $('#toggleView').html(text);
+        let elem = $('#weekControls');
+        this.weeklyView ? elem.show() : elem.hide();
     }
 
     moveToView() {
