@@ -311,6 +311,7 @@ class FTSEApp extends BaseApp {
         let dailyPrices = this.dailyPricesPerMonth[month];
         for(i=start; i<numSlots; ++i) {
             this.setShareDailyPrice(i, dailyPrices[i-start]);
+            this.setShareWeeklyPrice(i, dailyPrices[i-start]);
         }
     }
 
@@ -322,14 +323,33 @@ class FTSEApp extends BaseApp {
         }
     }
 
+    clearWeeklyBlocks() {
+        for(let block=0, numBlocks=this.weeklyColumns.length; block<numBlocks; ++block) {
+            this.weeklyColumns[block].material = this.spindleMat;
+            this.weeklyColumns[block].scale.set(1, 1, 1);
+        }
+    }
+
     disableBlock(blockNumber) {
         //Grey out given block number
         this.columns[blockNumber].material = this.spindleMatDisabled;
     }
 
+    disableWeeklyBlock(blockNumber) {
+        //Grey out given block number
+        this.weeklyColumns[blockNumber].material = this.spindleMatDisabled;
+    }
+
     setShareDailyPrice(block, price) {
         //Scale price to reasonable size
         let currentBlock = this.columns[block];
+        currentBlock.scale.set(1, price, 1);
+        currentBlock.position.y = price/2;
+    }
+
+    setShareWeeklyPrice(block, price) {
+        //Scale price to relative size
+        let currentBlock = this.weeklyColumns[block];
         currentBlock.scale.set(1, price, 1);
         currentBlock.position.y = price/2;
     }
@@ -390,7 +410,7 @@ class FTSEApp extends BaseApp {
                 this.root.position.x = this.sceneMoveEnd;
                 this.moveTime = 0;
                 this.viewMoving = false;
-                let text = this.weeklyView ? "Weekly" : "Monthly";
+                let text = this.weeklyView ? "Daily" : "Weekly";
                 $('#toggleView').html(text);
             }
         }
