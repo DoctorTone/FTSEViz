@@ -17,4 +17,9 @@ const NUM_SEGMENTS = 5;
 const NUM_COLUMNS_PER_SEGMENT = 5;
 const WALL_OPACITY = 0.55;
 const CLOSE_PRICE = 2;
-
+const MONTHLY_X = 250;
+const MONTHLY_Y = 0;
+const MONTHLY_Z = 0;
+const WEEKLY_X = -250;
+const WEEKLY_Y = 0;
+const WEEKLY_Z = 0;

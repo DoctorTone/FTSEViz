@@ -13,9 +13,6 @@ class FTSEApp extends BaseApp {
         //Init base createsScene
         super.createScene();
 
-        //Add ground plane
-        this.addGround();
-
         //Set up main scene
         this.WALL_RADIUS = WALL_DEPTH;
         this.DIVS_PER_SEGMENT = 6;
@@ -33,6 +30,7 @@ class FTSEApp extends BaseApp {
         this.animate = true;
         this.moveSpeed = 0;
         this.MOVE_INC = -110;
+        this.VIEW_MOVE_INC = 500;
         this.SCENE_MOVE_TIME = 2;
         this.sceneMoveEnd = 0;
         this.BLOCKS_PER_SEGMENT = 5;
@@ -43,6 +41,16 @@ class FTSEApp extends BaseApp {
         this.currentMonth = MONTHS.JANUARY;
         this.currentWeek = 0;
 
+        this.weeklyView = true;
+        this.viewMoving = false;
+
+        //Root group
+        this.root = new THREE.Object3D();
+        this.addToScene(this.root);
+
+        //Add ground plane
+        this.addGround();
+
         //Main spindles
         let parent = new THREE.Object3D();
         let cylinderGeom = new THREE.CylinderBufferGeometry(CENTRE_RADIUS, CENTRE_RADIUS, CENTRE_HEIGHT, SEGMENTS);
@@ -50,16 +58,17 @@ class FTSEApp extends BaseApp {
         this.spindleMatDisabled = new THREE.MeshLambertMaterial({color: 0x909090});
         let spindle = new THREE.Mesh(cylinderGeom, this.spindleMat);
         spindle.position.y += CENTRE_HEIGHT/2;
+        parent.position.set(WEEKLY_X, WEEKLY_Y, WEEKLY_Z);
         parent.add(spindle);
-        this.addToScene(parent);
+        this.root.add(parent);
 
         //Create structure for weekly data
         let weeklyParent = new THREE.Object3D();
         spindle = new THREE.Mesh(cylinderGeom, this.spindleMat);
         spindle.position.y += CENTRE_HEIGHT/2;
         weeklyParent.add(spindle);
-        weeklyParent.position.x = MONTHLY_START;
-        this.addToScene(weeklyParent);
+        weeklyParent.position.set(MONTHLY_X, MONTHLY_Y, MONTHLY_Z);
+        this.root.add(weeklyParent);
 
         //Walls
         let wallMat = new THREE.MeshLambertMaterial({color: 0xffffff, transparent: true, opacity: WALL_OPACITY});
@@ -210,7 +219,7 @@ class FTSEApp extends BaseApp {
         let ground = new THREE.Mesh(groundGeom, groundMat);
         ground.name = "Ground";
         ground.rotation.x = -Math.PI/2;
-        this.addToScene(ground);
+        this.root.add(ground);
     }
 
     preProcessData() {
@@ -357,7 +366,7 @@ class FTSEApp extends BaseApp {
         }
 
         if(this.sceneMoving) {
-            if(!this.animate) this.moveTime = this.SCENE_ROTATE_TIME;
+            if(!this.animate) this.moveTime = this.SCENE_MOVE_TIME;
             this.moveTime += delta;
             this.parentGroupDaily.position.y += (this.moveSpeed * delta);
             if(this.moveTime >= this.SCENE_MOVE_TIME) {
@@ -371,6 +380,18 @@ class FTSEApp extends BaseApp {
                 }
                 this.MOVE_INC *= -1;
                 this.moveSpeed = this.MOVE_INC / this.SCENE_MOVE_TIME;
+            }
+        }
+
+        if(this.viewMoving) {
+            this.moveTime += delta;
+            this.root.position.x += (this.moveSpeed * delta);
+            if(this.moveTime >= this.SCENE_MOVE_TIME) {
+                this.root.position.x = this.sceneMoveEnd;
+                this.moveTime = 0;
+                this.viewMoving = false;
+                let text = this.weeklyView ? "Weekly" : "Monthly";
+                $('#toggleView').html(text);
             }
         }
 
@@ -439,6 +460,20 @@ class FTSEApp extends BaseApp {
         --this.currentMonth;
         if(this.currentMonth < MONTHS.JANUARY) this.currentMonth = MONTHS.DECEMBER;
     }
+
+    toggleView() {
+        this.weeklyView = !this.weeklyView;
+        this.viewMoving = true;
+        this.moveToView();
+    }
+
+    moveToView() {
+        let distance = this.VIEW_MOVE_INC;
+        this.moveSpeed = this.VIEW_MOVE_INC / this.SCENE_MOVE_TIME;
+        this.moveSpeed *= this.weeklyView ? 1 : -1;
+        distance *= this.weeklyView ? 1 : -1;
+        this.sceneMoveEnd = this.root.position.x + distance;
+    }
 }
 
 $(document).ready( () => {
@@ -462,6 +497,10 @@ $(document).ready( () => {
 
     $('#nextWeek').on("click", () => {
         app.nextSegment();
+    });
+
+    $('#toggleView').on("click", () => {
+        app.toggleView();
     });
 
     app.run();
