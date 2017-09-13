@@ -16,8 +16,9 @@ class FTSEApp extends BaseApp {
         //Set up main scene
         this.WALL_RADIUS = WALL_DEPTH;
         this.DIVS_PER_SEGMENT = 6;
-        this.ROT_INC = (Math.PI * 2)/NUM_WALLS;
-        this.DIV_ROT_INC = this.ROT_INC/this.DIVS_PER_SEGMENT;
+        this.ROT_INC_DAILY = (Math.PI * 2)/NUM_WALLS_DAILY;
+        this.ROT_INC_WEEKLY = (Math.PI * 2)/NUM_WALLS_WEEKLY;
+        this.DIV_ROT_INC = this.ROT_INC_DAILY/this.DIVS_PER_SEGMENT;
         this.SEG_OFFSET = 2;
         this.SCENE_ROTATE_TIME = 2;
         this.sceneRotating = false;
@@ -41,7 +42,7 @@ class FTSEApp extends BaseApp {
         this.currentMonth = MONTHS.JANUARY;
         this.currentWeek = 0;
 
-        this.weeklyView = true;
+        this.weeklyView = false;
         this.viewMoving = false;
 
         //Root group
@@ -60,6 +61,7 @@ class FTSEApp extends BaseApp {
         spindle.position.y += CENTRE_HEIGHT/2;
         parent.position.set(WEEKLY_X, WEEKLY_Y, WEEKLY_Z);
         parent.add(spindle);
+        this.parentGroupDaily = parent;
         this.root.add(parent);
 
         //Create structure for weekly data
@@ -68,6 +70,7 @@ class FTSEApp extends BaseApp {
         spindle.position.y += CENTRE_HEIGHT/2;
         weeklyParent.add(spindle);
         weeklyParent.position.set(MONTHLY_X, MONTHLY_Y, MONTHLY_Z);
+        this.parentGroupWeekly = weeklyParent;
         this.root.add(weeklyParent);
 
         //Walls
@@ -104,8 +107,6 @@ class FTSEApp extends BaseApp {
         blockInfo.parent = weeklyParent;
         blockInfo.name = "weeklyBlock";
         this.addBlocks(blockInfo, this.weeklyColumns);
-
-        this.parentGroupDaily = parent;
 
         //Simple label
         this.labelManager = new LabelManager();
@@ -377,9 +378,9 @@ class FTSEApp extends BaseApp {
         if(this.sceneRotating) {
             if(!this.animate) this.rotationTime = this.SCENE_ROTATE_TIME;
             this.rotationTime += delta;
-            this.parentGroupDaily.rotation.y += (this.rotSpeed * delta);
+            this.rotateGroup.rotation.y += (this.rotSpeed * delta);
             if(this.rotationTime >= this.SCENE_ROTATE_TIME) {
-                this.parentGroupDaily.rotation.y = this.sceneRotEnd;
+                this.rotateGroup.rotation.y = this.sceneRotEnd;
                 this.rotationTime = 0;
                 this.sceneRotating = false;
             }
@@ -437,9 +438,12 @@ class FTSEApp extends BaseApp {
     previousSegment() {
         //Move to previous segment
         if(this.sceneRotating) return;
+
+        let increment = this.weeklyView ? this.ROT_INC_WEEKLY : this.ROT_INC_DAILY;
+        this.rotateGroup = this.weeklyView ? this.parentGroupWeekly : this.parentGroupDaily;
+        this.rotSpeed = increment / this.SCENE_ROTATE_TIME;
+        this.sceneRotEnd = this.rotateGroup.rotation.y + increment;
         if(--this.currentWeek < 0) this.currentWeek = DATES.WEEKS_PER_MONTH;
-        this.rotSpeed = this.ROT_INC / this.SCENE_ROTATE_TIME;
-        this.sceneRotEnd = this.parentGroupDaily.rotation.y + this.ROT_INC;
         this.sceneRotating = true;
 
         let showWeek = this.currentWeek + 1;
@@ -449,9 +453,12 @@ class FTSEApp extends BaseApp {
     nextSegment() {
         //Move to next segment
         if(this.sceneRotating) return;
+
+        let increment = this.weeklyView ? this.ROT_INC_WEEKLY : this.ROT_INC_DAILY;
+        this.rotSpeed = -increment / this.SCENE_ROTATE_TIME;
+        this.rotateGroup = this.weeklyView ? this.parentGroupWeekly : this.parentGroupDaily;
+        this.sceneRotEnd = this.rotateGroup.rotation.y - increment;
         if(++this.currentWeek > DATES.WEEKS_PER_MONTH) this.currentWeek = 0;
-        this.rotSpeed = -this.ROT_INC / this.SCENE_ROTATE_TIME;
-        this.sceneRotEnd = this.parentGroupDaily.rotation.y - this.ROT_INC;
         this.sceneRotating = true;
 
         let showWeek = this.currentWeek + 1;
@@ -461,6 +468,11 @@ class FTSEApp extends BaseApp {
     nextMonth() {
         //Animate to show next month
         if(this.sceneMoving) return;
+
+        if(this.weeklyView) {
+            this.nextSegment();
+            return;
+        }
 
         this.moveSpeed = this.MOVE_INC / this.SCENE_MOVE_TIME;
         this.sceneMoveEnd = this.parentGroupDaily.position.y + this.MOVE_INC;
@@ -472,6 +484,11 @@ class FTSEApp extends BaseApp {
     previousMonth() {
         //Animate to show next month
         if(this.sceneMoving) return;
+
+        if(this.weeklyView) {
+            this.previousSegment();
+            return;
+        }
 
         this.moveSpeed = this.MOVE_INC / this.SCENE_MOVE_TIME;
         this.sceneMoveEnd = this.parentGroupDaily.position.y + this.MOVE_INC;
@@ -487,23 +504,23 @@ class FTSEApp extends BaseApp {
     }
 
     changeViews() {
-        let text = this.weeklyView ? "Daily" : "Weekly";
+        let text = this.weeklyView ? "Weekly" : "Daily";
         $('#toggleView').html(text);
         let weekControls = $('#weekControls');
         let weekInfo = $('#weekData');
-        weekControls.hide();
-        weekInfo.hide();
+        weekControls.show();
+        weekInfo.show();
         if(this.weeklyView) {
-            weekControls.show();
-            weekInfo.show();
+            weekControls.hide();
+            weekInfo.hide();
         }
     }
 
     moveToView() {
         let distance = this.VIEW_MOVE_INC;
         this.moveSpeed = this.VIEW_MOVE_INC / this.SCENE_MOVE_TIME;
-        this.moveSpeed *= this.weeklyView ? 1 : -1;
-        distance *= this.weeklyView ? 1 : -1;
+        this.moveSpeed *= this.weeklyView ? -1 : 1;
+        distance *= this.weeklyView ? -1 : 1;
         this.sceneMoveEnd = this.root.position.x + distance;
     }
 }
