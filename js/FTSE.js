@@ -39,7 +39,9 @@ class FTSEApp extends BaseApp {
         this.NUM_BLOCKS = this.NUM_SEGMENTS * this.BLOCKS_PER_SEGMENT;
         this.currentLabel = undefined;
 
-        this.currentMonth = MONTHS.JANUARY;
+        this.currentMonthDaily = MONTHS.JANUARY;
+        this.currentMonthWeekly = MONTHS.JANUARY;
+
         this.currentWeek = 0;
 
         this.weeklyView = false;
@@ -301,7 +303,7 @@ class FTSEApp extends BaseApp {
 
     updateSceneDaily() {
         //Update info
-        let month = this.currentMonth;
+        let month = this.currentMonthDaily;
         $('#year').html(this.data[month].year);
         $('#month').html(this.data[month].month);
 
@@ -330,7 +332,7 @@ class FTSEApp extends BaseApp {
     }
 
     setSceneWeekly() {
-        let month = this.currentMonth - 2;
+        let month = this.currentMonthWeekly - 2;
         if(month < 0) {
             month += NUM_MONTHS;
         }
@@ -349,7 +351,7 @@ class FTSEApp extends BaseApp {
 
     updateSceneWeekly() {
         let increment = this.rotSpeed < 0 ? 2 : -2;
-        let month = this.currentMonth + increment;
+        let month = this.currentMonthWeekly + increment;
         if(month >= NUM_MONTHS) {
             month -= NUM_MONTHS;
         }
@@ -367,6 +369,7 @@ class FTSEApp extends BaseApp {
         }
 
         this.setShareWeeklyPriceSegment(segment, data);
+        $('#month').html(this.data[this.currentMonthWeekly].month);
     }
 
     clearBlocks() {
@@ -416,7 +419,7 @@ class FTSEApp extends BaseApp {
     }
 
     getShareText(block) {
-        let dailyPrices = this.realDailyPricesPerMonth[this.currentMonth];
+        let dailyPrices = this.realDailyPricesPerMonth[this.currentMonthDaily];
         return dailyPrices[block];
     }
 
@@ -543,13 +546,15 @@ class FTSEApp extends BaseApp {
         //Animate to show next month
         if(this.sceneMoving) return;
 
-        ++this.currentMonth;
-        if(this.currentMonth > MONTHS.DECEMBER) this.currentMonth = MONTHS.JANUARY;
-
         if(this.weeklyView) {
+            ++this.currentMonthWeekly;
+            if(this.currentMonthWeekly > MONTHS.DECEMBER) this.currentMonthWeekly = MONTHS.JANUARY;
             this.nextSegment();
             return;
         }
+
+        ++this.currentMonthDaily;
+        if(this.currentMonthDaily > MONTHS.DECEMBER) this.currentMonthDaily = MONTHS.JANUARY;
 
         this.moveSpeed = this.MOVE_INC / this.SCENE_MOVE_TIME;
         this.sceneMoveEnd = this.parentGroupDaily.position.y + this.MOVE_INC;
@@ -560,14 +565,15 @@ class FTSEApp extends BaseApp {
         //Animate to show next month
         if(this.sceneMoving) return;
 
-        --this.currentMonth;
-        if(this.currentMonth < MONTHS.JANUARY) this.currentMonth = MONTHS.DECEMBER;
-
         if(this.weeklyView) {
+            --this.currentMonthWeekly;
+            if(this.currentMonthWeekly < MONTHS.JANUARY) this.currentMonthWeekly = MONTHS.DECEMBER;
             this.previousSegment();
             return;
         }
 
+        --this.currentMonthDaily;
+        if(this.currentMonthDaily < MONTHS.JANUARY) this.currentMonthDaily = MONTHS.DECEMBER;
         this.moveSpeed = this.MOVE_INC / this.SCENE_MOVE_TIME;
         this.sceneMoveEnd = this.parentGroupDaily.position.y + this.MOVE_INC;
         this.sceneMoving = true;
@@ -590,6 +596,8 @@ class FTSEApp extends BaseApp {
             weekControls.hide();
             weekInfo.hide();
         }
+        let month = this.weeklyView ? this.currentMonthWeekly : this.currentMonthDaily;
+        $('#month').html(this.data[month].month);
     }
 
     moveToView() {
