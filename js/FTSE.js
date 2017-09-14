@@ -71,6 +71,8 @@ class FTSEApp extends BaseApp {
         weeklyParent.add(spindle);
         weeklyParent.position.set(MONTHLY_X, MONTHLY_Y, MONTHLY_Z);
         this.parentGroupWeekly = weeklyParent;
+        this.parentGroupWeekly.rotation.y = -(this.ROT_INC_DAILY * 2);
+        this.facingSegment = 2;
         this.root.add(weeklyParent);
 
         //Walls
@@ -121,7 +123,8 @@ class FTSEApp extends BaseApp {
         dataLoad.load("data/ftse100_2016.json", data => {
             this.data = data;
             this.preProcessData();
-            this.updateScene();
+            this.updateSceneDaily();
+            this.setSceneWeekly();
         });
     }
 
@@ -296,7 +299,7 @@ class FTSEApp extends BaseApp {
         this.realWeeklyPricesPerMonth = realWeeklyPricesPerMonth;
     }
 
-    updateScene() {
+    updateSceneDaily() {
         //Update info
         let month = this.currentMonth;
         $('#year').html(this.data[month].year);
@@ -305,14 +308,14 @@ class FTSEApp extends BaseApp {
         //Grey out unused blocks for each month
         this.clearBlocks();
         let i, start = this.data[month].startSlot, end = this.data[month].endSlot;
-        if(start > 0) {
-            for(i=0; i<start; ++i) {
+        if (start > 0) {
+            for (i = 0; i < start; ++i) {
                 this.disableBlock(i);
             }
         }
-        if(end < (this.BLOCKS_PER_SEGMENT - 1)) {
+        if (end < (this.BLOCKS_PER_SEGMENT - 1)) {
             let segment = 4 * this.BLOCKS_PER_SEGMENT;
-            for(i = segment + end + 1; i<this.NUM_BLOCKS; ++i) {
+            for (i = segment + end + 1; i < this.NUM_BLOCKS; ++i) {
                 this.disableBlock(i);
             }
         }
@@ -320,12 +323,14 @@ class FTSEApp extends BaseApp {
         let numShares = this.data[month].shares.length;
         let numSlots = numShares + start;
         let dailyPrices = this.dailyPricesPerMonth[month];
-        for(i=start; i<numSlots; ++i) {
-            this.setShareDailyPrice(i, dailyPrices[i-start]);
+        for (i = start; i < numSlots; ++i) {
+            this.setShareDailyPrice(i, dailyPrices[i - start]);
         }
 
-        this.clearWeeklyBlocks();
-        month = this.currentMonth - 2;
+    }
+
+    setSceneWeekly() {
+        let month = this.currentMonth - 2;
         if(month < 0) {
             month += NUM_MONTHS;
         }
@@ -340,8 +345,28 @@ class FTSEApp extends BaseApp {
             }
             weeklyPrices = this.weeklyPricesPerMonth[month];
         }
-        //Rotate so current month at front
-        this.parentGroupWeekly.rotation.y = -(this.ROT_INC_DAILY * 2);
+    }
+
+    updateSceneWeekly() {
+        let increment = this.rotSpeed < 0 ? 2 : -2;
+        let month = this.currentMonth + increment;
+        if(month >= NUM_MONTHS) {
+            month -= NUM_MONTHS;
+        }
+        if(month < 0) {
+            month += NUM_MONTHS;
+        }
+        let data = this.weeklyPricesPerMonth[month];
+
+        let segment = this.facingSegment + increment;
+        if(segment >= NUM_SEGMENTS) {
+            segment -= NUM_SEGMENTS;
+        }
+        if(segment < 0) {
+            segment += NUM_SEGMENTS;
+        }
+
+        this.setShareWeeklyPriceSegment(segment, data);
     }
 
     clearBlocks() {
@@ -383,6 +408,13 @@ class FTSEApp extends BaseApp {
         currentBlock.position.y = price/2;
     }
 
+    setShareWeeklyPriceSegment(segment, data) {
+        let block = segment * NUM_COLUMNS_PER_SEGMENT;
+        for(let i=0; i<data.length; ++i) {
+            this.setShareWeeklyPrice(block + i, data[i]);
+        }
+    }
+
     getShareText(block) {
         let dailyPrices = this.realDailyPricesPerMonth[this.currentMonth];
         return dailyPrices[block];
@@ -411,6 +443,9 @@ class FTSEApp extends BaseApp {
                 this.rotateGroup.rotation.y = this.sceneRotEnd;
                 this.rotationTime = 0;
                 this.sceneRotating = false;
+                if(this.weeklyView) {
+                    this.updateSceneWeekly();
+                }
             }
         }
 
@@ -423,7 +458,7 @@ class FTSEApp extends BaseApp {
                 this.moveTime = 0;
                 if(this.MOVE_INC < 0) {
                     this.sceneMoveEnd = 0;
-                    this.updateScene();
+                    this.updateSceneDaily();
                 } else {
                     this.sceneMoving = false;
                 }
@@ -468,12 +503,17 @@ class FTSEApp extends BaseApp {
         //Move to previous segment
         if(this.sceneRotating) return;
 
-        let increment = this.weeklyView ? this.ROT_INC_WEEKLY : this.ROT_INC_DAILY;
         this.rotateGroup = this.weeklyView ? this.parentGroupWeekly : this.parentGroupDaily;
-        this.rotSpeed = increment / this.SCENE_ROTATE_TIME;
-        this.sceneRotEnd = this.rotateGroup.rotation.y + increment;
+        this.rotSpeed = this.ROT_INC_DAILY / this.SCENE_ROTATE_TIME;
+        this.sceneRotEnd = this.rotateGroup.rotation.y + this.ROT_INC_DAILY;
         if(--this.currentWeek < 0) this.currentWeek = DATES.WEEKS_PER_MONTH;
         this.sceneRotating = true;
+
+        if(this.weeklyView) {
+            if(--this.facingSegment < 0) {
+                this.facingSegment = NUM_SEGMENTS - 1;
+            }
+        }
 
         let showWeek = this.currentWeek + 1;
         $('#week').html(showWeek);
@@ -489,6 +529,12 @@ class FTSEApp extends BaseApp {
         if(++this.currentWeek > DATES.WEEKS_PER_MONTH) this.currentWeek = 0;
         this.sceneRotating = true;
 
+        if(this.weeklyView) {
+            if(++this.facingSegment >= NUM_SEGMENTS) {
+                this.facingSegment = 0;
+            }
+        }
+
         let showWeek = this.currentWeek + 1;
         $('#week').html(showWeek);
     }
@@ -496,6 +542,9 @@ class FTSEApp extends BaseApp {
     nextMonth() {
         //Animate to show next month
         if(this.sceneMoving) return;
+
+        ++this.currentMonth;
+        if(this.currentMonth > MONTHS.DECEMBER) this.currentMonth = MONTHS.JANUARY;
 
         if(this.weeklyView) {
             this.nextSegment();
@@ -505,13 +554,14 @@ class FTSEApp extends BaseApp {
         this.moveSpeed = this.MOVE_INC / this.SCENE_MOVE_TIME;
         this.sceneMoveEnd = this.parentGroupDaily.position.y + this.MOVE_INC;
         this.sceneMoving = true;
-        ++this.currentMonth;
-        if(this.currentMonth > MONTHS.DECEMBER) this.currentMonth = MONTHS.JANUARY;
     }
 
     previousMonth() {
         //Animate to show next month
         if(this.sceneMoving) return;
+
+        --this.currentMonth;
+        if(this.currentMonth < MONTHS.JANUARY) this.currentMonth = MONTHS.DECEMBER;
 
         if(this.weeklyView) {
             this.previousSegment();
@@ -521,8 +571,6 @@ class FTSEApp extends BaseApp {
         this.moveSpeed = this.MOVE_INC / this.SCENE_MOVE_TIME;
         this.sceneMoveEnd = this.parentGroupDaily.position.y + this.MOVE_INC;
         this.sceneMoving = true;
-        --this.currentMonth;
-        if(this.currentMonth < MONTHS.JANUARY) this.currentMonth = MONTHS.DECEMBER;
     }
 
     toggleView() {
