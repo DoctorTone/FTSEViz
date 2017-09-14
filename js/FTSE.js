@@ -481,7 +481,7 @@ class FTSEApp extends BaseApp {
             }
         }
 
-        this.currentLabel.visible = true;
+        this.currentLabel.visible = false;
         if(this.hoverObjects.length) {
             let text = this.hoverObjects[0].object.name;
             //DEBUG
