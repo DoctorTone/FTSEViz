@@ -115,8 +115,8 @@ class FTSEApp extends BaseApp {
         this.labelManager = new SpriteManager();
         let position = new THREE.Vector3();
         position.copy(this.columns[2].position);
-        let scale = new THREE.Vector3(50, 50, 1);
-        let label = this.labelManager.create("Tony", position, scale, 32, 1, false, false);
+        let scale = new THREE.Vector3(30, 30, 1);
+        let label = this.labelManager.create("Tony", false, position, scale, 32, 1, false, false);
         this.addToScene(label);
         this.currentLabel = label;
 

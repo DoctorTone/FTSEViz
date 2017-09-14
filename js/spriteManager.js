@@ -21,17 +21,17 @@ let SpriteManager = function () {
     const DAYS_PER_MONTH = 31;
 
     return {
-        create: function(textLines, position, scale, fontSize, opacity, visible, rect) {
+        create: function(textLines, multiLine, position, scale, fontSize, opacity, visible, rect) {
             //Create label
             let canvas = document.createElement('canvas');
-            let numLines = textLines.length;
+            let numLines = multiLine ? textLines.length : 1;
             let horizSpacing = 20, vertSpacing = 5;
             canvas.height = (fontSize * numLines) + vertSpacing + (defaultBorderThickness * 2);
 
             let context = canvas.getContext('2d');
             context.font = fontSize + "px " + defaultFontFace;
 
-            let metrics = context.measureText( textLines[0] );
+            let metrics = context.measureText( multiLine ? textLines[0] : textLines );
             let textWidth = metrics.width;
             canvas.width = textWidth + (defaultBorderThickness * 2) + horizSpacing;
 
@@ -53,7 +53,7 @@ let SpriteManager = function () {
             let interLineSpace = 2;
             context.fillStyle = textColour;
             for(let i=0; i<numLines; ++i) {
-                context.fillText(textLines[i], xStart, fontSize * (i+1));
+                context.fillText(multiLine ? textLines[i] : textLines, xStart, fontSize * (i+1));
                 lineSpacing += (fontSize + interLineSpace);
             }
 
