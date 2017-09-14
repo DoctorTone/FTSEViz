@@ -86,7 +86,6 @@ class FTSEApp extends BaseApp {
 
         this.addSpindle(spindleInfo);
 
-        spindleInfo.segments = 6;
         spindleInfo.parent = weeklyParent;
         this.addSpindle(spindleInfo);
 
@@ -265,9 +264,12 @@ class FTSEApp extends BaseApp {
 
         //Weekly totals organised by month
         let weeklyPricesPerMonth = [], weeklyPrices = [];
+        let realWeeklyPricesPerMonth = [], realWeeklyPrices = [];
         for(let month=MONTHS.JANUARY; month<=MONTHS.DECEMBER; ++month) {
             weeklyPrices = this.data[month].sharesWeekly;
+            realWeeklyPrices = weeklyPrices.slice();
             weeklyPricesPerMonth.push(weeklyPrices);
+            realWeeklyPricesPerMonth.push(realWeeklyPrices);
         }
         largest = -1;
         smallest = 1000000;
@@ -285,6 +287,13 @@ class FTSEApp extends BaseApp {
                 shares[share] = (((shares[share] - smallest)/delta)*100)+1;
             }
         }
+        //Fix months that don't have 5 weeks
+        let jan = weeklyPricesPerMonth[0];
+        jan.push(-1);
+        jan = realWeeklyPricesPerMonth[0];
+        jan.push(-1);
+        this.weeklyPricesPerMonth = weeklyPricesPerMonth;
+        this.realWeeklyPricesPerMonth = realWeeklyPricesPerMonth;
     }
 
     updateScene() {
@@ -313,8 +322,26 @@ class FTSEApp extends BaseApp {
         let dailyPrices = this.dailyPricesPerMonth[month];
         for(i=start; i<numSlots; ++i) {
             this.setShareDailyPrice(i, dailyPrices[i-start]);
-            this.setShareWeeklyPrice(i, dailyPrices[i-start]);
         }
+
+        this.clearWeeklyBlocks();
+        month = this.currentMonth - 2;
+        if(month < 0) {
+            month += NUM_MONTHS;
+        }
+        let weeklyPrices = this.weeklyPricesPerMonth[month];
+        let slot = 0;
+        for(let i=0; i<DISPLAY_MONTHS; ++i) {
+            for(let j=0, numSlots=weeklyPrices.length; j<numSlots; ++j) {
+                this.setShareWeeklyPrice(slot++, weeklyPrices[j]);
+            }
+            if(++month > MONTHS.DECEMBER) {
+                month = MONTHS.JANUARY;
+            }
+            weeklyPrices = this.weeklyPricesPerMonth[month];
+        }
+        //Rotate so current month at front
+        this.parentGroupWeekly.rotation.y = -(this.ROT_INC_DAILY * 2);
     }
 
     clearBlocks() {
@@ -456,10 +483,9 @@ class FTSEApp extends BaseApp {
         //Move to next segment
         if(this.sceneRotating) return;
 
-        let increment = this.weeklyView ? this.ROT_INC_WEEKLY : this.ROT_INC_DAILY;
-        this.rotSpeed = -increment / this.SCENE_ROTATE_TIME;
+        this.rotSpeed = -this.ROT_INC_DAILY / this.SCENE_ROTATE_TIME;
         this.rotateGroup = this.weeklyView ? this.parentGroupWeekly : this.parentGroupDaily;
-        this.sceneRotEnd = this.rotateGroup.rotation.y - increment;
+        this.sceneRotEnd = this.rotateGroup.rotation.y - this.ROT_INC_DAILY;
         if(++this.currentWeek > DATES.WEEKS_PER_MONTH) this.currentWeek = 0;
         this.sceneRotating = true;
 

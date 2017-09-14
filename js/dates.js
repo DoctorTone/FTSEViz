@@ -19,6 +19,7 @@ let MONTHS = {
     DECEMBER: 11
 };
 
+const NUM_MONTHS = 12;
 let DATES = {
     WEEKS_PER_MONTH: 4
 };
