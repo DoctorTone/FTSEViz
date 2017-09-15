@@ -112,12 +112,16 @@ class FTSEApp extends BaseApp {
         this.addBlocks(blockInfo, this.weeklyColumns);
 
         //Simple label
-        this.labelManager = new SpriteManager();
+        this.labelManager = new LabelManager();
         let position = new THREE.Vector3();
-        position.copy(this.columns[2].position);
-        let scale = new THREE.Vector3(30, 30, 1);
-        let label = this.labelManager.create("Tony", false, position, scale, 32, 1, false, false);
-        this.addToScene(label);
+        //position.copy(this.columns[2].position);
+        let scale = new THREE.Vector3(20, 10, 1);
+        let labelProperty = {};
+        labelProperty.position = position;
+        labelProperty.scale = scale;
+        labelProperty.multiLine = false;
+        let label = this.labelManager.create("shareLabel", "Tony", labelProperty);
+        this.addToScene(label.getSprite());
         this.currentLabel = label;
 
         //Load in data
@@ -433,6 +437,11 @@ class FTSEApp extends BaseApp {
         return new THREE.Vector3(posX, posY, posZ);
     }
 
+    getBlockHeight(block) {
+        let currentBlock = this.columns[block];
+        return currentBlock.position.y;
+    }
+
     update() {
         super.update();
         let delta = this.clock.getDelta();
@@ -481,7 +490,7 @@ class FTSEApp extends BaseApp {
             }
         }
 
-        this.currentLabel.visible = false;
+        this.currentLabel.setVisibility(false);
         if(this.hoverObjects.length) {
             let text = this.hoverObjects[0].object.name;
             //DEBUG
@@ -494,11 +503,11 @@ class FTSEApp extends BaseApp {
 
             text = this.getShareText(index[0]);
             if(!text) text = "n/a";
-            this.currentLabel.position.setFromMatrixPosition(this.hoverObjects[0].object.matrixWorld);
-            this.currentLabel.position.y *= 1.85;
-            this.currentLabel.visible = true;
-            //DEBUG
-            //this.currentLabel.setText(text);
+            this.currentLabel.setWorldPosition(this.hoverObjects[0].object.matrixWorld);
+            let height = this.getBlockHeight(index);
+            this.currentLabel.offsetY(height + 5);
+            this.currentLabel.setVisibility(true);
+            this.currentLabel.setText(text);
         }
     }
 

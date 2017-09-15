@@ -198,7 +198,7 @@ let SpriteManager = function () {
         setText(name, text) {
             let label = this.getSprite(name);
             if(label) {
-                
+
             }
         }
     };
