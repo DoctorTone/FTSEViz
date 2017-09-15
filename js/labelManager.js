@@ -12,19 +12,29 @@ class LabelManager {
             textColour: "rgba(255, 255, 255, 1.0)",
             textLimit: 20,
             scale: new THREE.Vector3(50, 50, 1),
+            position: new THREE.Vector3(),
             opacity: 1.0,
             fontSize: 32,
             visibility: false,
-            radius: 20
+            radius: 20,
+            rect: false,
+            multiLine: false,
+            horizSpacing: 20,
+            vertSpacing: 5
         };
 
         this.labels = [];
         this.labelNames = [];
     }
 
-    create(name, text, position) {
+    create(name, text, labelProperties) {
         //Create label
-        let label = new Label(name, text, position, this.labelProperties);
+        for(let key in this.labelProperties) {
+            if(!labelProperties[key]) {
+                labelProperties[key] = this.labelProperties[key];
+            }
+        }
+        let label = new Label(name, text, labelProperties);
         this.labels.push(label);
         this.labelNames.push(name);
 

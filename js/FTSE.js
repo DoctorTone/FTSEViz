@@ -423,8 +423,9 @@ class FTSEApp extends BaseApp {
     }
 
     getShareText(block) {
-        let dailyPrices = this.realDailyPricesPerMonth[this.currentMonthDaily];
-        return dailyPrices[block];
+        let prices = this.weeklyView ? this.realWeeklyPricesPerMonth[this.currentMonthWeekly] :
+            this.realDailyPricesPerMonth[this.currentMonthDaily];
+        return prices[block];
     }
 
     getBlockPosition(segment, position) {
@@ -505,7 +506,7 @@ class FTSEApp extends BaseApp {
             if(!text) text = "n/a";
             this.currentLabel.setWorldPosition(this.hoverObjects[0].object.matrixWorld);
             let height = this.getBlockHeight(index);
-            this.currentLabel.offsetY(height + 5);
+            this.currentLabel.offsetY(height + 6);
             this.currentLabel.setVisibility(true);
             this.currentLabel.setText(text);
         }
