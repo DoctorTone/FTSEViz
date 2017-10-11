@@ -20,6 +20,8 @@ class FTSEApp extends BaseApp {
 
         this.baseName = "FTSEVizConfig";
         this.messageTimer = 3 * 1000;
+        this.zoomingOut = false;
+        this.zoomingIn = false;
     }
 
     init(container) {
@@ -62,7 +64,7 @@ class FTSEApp extends BaseApp {
         this.rotationTime = 0;
         this.moveTime = 0;
         this.animate = true;
-        this.moveSpeed = 0;
+        this.moveSpeed = MOVE_SPEED;
         this.MOVE_INC = -110;
         this.VIEW_MOVE_INC = 500;
         this.SCENE_MOVE_TIME = 2;
@@ -595,11 +597,12 @@ class FTSEApp extends BaseApp {
                 if(this.MOVE_INC < 0) {
                     this.sceneMoveEnd = 0;
                     this.updateSceneDaily();
+                    this.MOVE_INC *= -1;
+                    this.moveSpeed = this.MOVE_INC / this.SCENE_MOVE_TIME;
                 } else {
                     this.sceneMoving = false;
+                    this.moveSpeed = MOVE_SPEED;
                 }
-                this.MOVE_INC *= -1;
-                this.moveSpeed = this.MOVE_INC / this.SCENE_MOVE_TIME;
             }
         }
 
@@ -610,8 +613,17 @@ class FTSEApp extends BaseApp {
                 this.root.position.x = this.sceneMoveEnd;
                 this.moveTime = 0;
                 this.viewMoving = false;
+                this.moveSpeed = MOVE_SPEED;
                 this.changeViews();
             }
+        }
+
+        if(this.zoomingOut) {
+            this.root.position.z -= this.moveSpeed * delta;
+        }
+
+        if(this.zoomingIn) {
+            this.root.position.z += this.moveSpeed * delta;
         }
 
         this.currentLabel.setVisibility(false);
@@ -743,6 +755,14 @@ class FTSEApp extends BaseApp {
         this.sceneMoveEnd = this.root.position.x + distance;
     }
 
+    zoomOut(zoom) {
+        this.zoomingOut = zoom;
+    }
+
+    zoomIn(zoom) {
+        this.zoomingIn = zoom;
+    }
+
     displayMessage(msg) {
         $('#content').html(msg);
         $('#message').show();
@@ -782,6 +802,22 @@ $(document).ready( () => {
 
     $('#toggleView').on("click", () => {
         app.toggleView();
+    });
+
+    $('#zoomOut').on("mousedown", () => {
+        app.zoomOut(true);
+    });
+
+    $('#zoomOut').on("mouseup", () => {
+        app.zoomOut(false);
+    });
+
+    $('#zoomIn').on("mousedown", () => {
+        app.zoomIn(true);
+    });
+
+    $('#zoomIn').on("mouseup", () => {
+        app.zoomIn(false);
     });
 
     app.run();

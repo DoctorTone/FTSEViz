@@ -25,3 +25,4 @@ const WEEKLY_X = -250;
 const WEEKLY_Y = 0;
 const WEEKLY_Z = 0;
 const DISPLAY_MONTHS = 5;
+const MOVE_SPEED = 20;
