@@ -562,7 +562,7 @@ class FTSEApp extends BaseApp {
             if(!index) return;
 
             text = this.getShareText(index[0]);
-            if(!text) text = "n/a";
+            if(!text) text = "No data";
             this.currentLabel.setWorldPosition(this.hoverObjects[0].object.matrixWorld);
             let height = this.getBlockHeight(index);
             this.currentLabel.offsetY(height + 6);
