@@ -165,6 +165,7 @@ class FTSEApp extends BaseApp {
             this.updateSceneDaily();
             this.setSceneWeekly();
             this.addDateLabels();
+            this.addWeekLabels();
         });
     }
 
@@ -211,9 +212,33 @@ class FTSEApp extends BaseApp {
                 labelProperty.scale = scale;
                 labelProperty.multiLine = false;
                 labelProperty.visibility = true;
+                labelProperty.textColour = "rgba(255, 165, 0, 1.0)";
                 if(data[labelNumber] === undefined) break;
                 label = this.labelManager.create("dateLabel" + labelNumber, data[labelNumber][0], labelProperty);
                 this.parentGroupDaily.add(label.getSprite());
+                ++labelNumber
+            }
+        }
+    }
+
+    addWeekLabels() {
+        let labelProperty;
+        let scale = new THREE.Vector3(20, 10, 1);
+        let label, labelNumber = 0, labelOffsetY = 5, week;
+
+        for(let segment=0; segment<NUM_SEGMENTS; ++segment) {
+            for(let i=0; i<NUM_COLUMNS_PER_SEGMENT; ++i) {
+                labelProperty = {};
+                labelProperty.position = new THREE.Vector3();
+                labelProperty.position.copy(this.getBlockPosition(segment, i, this.WALL_RADIUS * 1.075));
+                labelProperty.position.y += labelOffsetY;
+                labelProperty.scale = scale;
+                labelProperty.multiLine = false;
+                labelProperty.visibility = true;
+                labelProperty.textColour = "rgba(255, 165, 0, 1.0)";
+                week = i + 1;
+                label = this.labelManager.create("weeklyLabel" + labelNumber, "Week" + week, labelProperty);
+                this.parentGroupWeekly.add(label.getSprite());
                 ++labelNumber
             }
         }
