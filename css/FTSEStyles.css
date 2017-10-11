@@ -92,6 +92,9 @@ body {
     border-radius: 15px;
     padding: 1%;
 }
+#message img {
+    width: 10%;
+}
 #instructions {
     left: 1%;
     bottom: 2%;
