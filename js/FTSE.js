@@ -883,6 +883,10 @@ $(document).ready( () => {
         app.zoomIn(false);
     });
 
+    $('#instructions').on("click", () => {
+        $('#myModal').modal();
+    });
+
     app.run();
 
 });
