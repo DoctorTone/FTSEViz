@@ -753,6 +753,11 @@ class FTSEApp extends BaseApp {
 }
 
 $(document).ready( () => {
+    if(!Detector.webgl) {
+        $('#notSupported').show();
+        return;
+    }
+
     let container = document.getElementById("WebGL-output");
     let app = new FTSEApp();
     app.init(container);
