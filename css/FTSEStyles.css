@@ -40,10 +40,10 @@ body {
     color: orange;
 }
 #dateControls {
-    bottom: 5%;
+    bottom: 4%;
     right: 1%;
     width: 10%;
-    background-color: #979498;
+    background-color: #3c3c3c;
     border-radius: 10px;
     padding: 0.75%;
 }

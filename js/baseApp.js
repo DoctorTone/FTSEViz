@@ -191,6 +191,8 @@ class BaseApp {
         this.controls.staticMoving = true;
         this.controls.dynamicDampingFactor = 0.3;
 
+        this.controls.disableMovement();
+
         this.controls.keys = [ 65, 83, 68 ];
 
         const LOOK_X = -250, LOOK_Y = 15, LOOK_Z = 0;
