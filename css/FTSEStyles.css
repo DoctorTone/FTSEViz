@@ -49,6 +49,10 @@ body {
 #dateControls p {
     font-size: 1.2vw;
     color: white;
+    margin: 0;
+}
+#dateControls div {
+    margin-bottom: 5%;
 }
 #info {
     top: 1.5%;
@@ -65,4 +69,14 @@ body {
     background-color: black;
     border-radius: 20px;
     padding: 0 5px;
+}
+#message {
+    bottom: 5%;
+    width: 33.3%;
+    left: 33.3%;
+    font-size: 1.5vw;
+    color: black;
+    background-color: #838383;
+    border-radius: 15px;
+    padding: 1%;
 }

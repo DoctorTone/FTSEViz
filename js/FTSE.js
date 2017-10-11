@@ -2,11 +2,44 @@
  * Created by DrTone on 06/07/2017.
  */
 
+let appearanceConfig = {
+    Back: '#5c5f64',
+    Ground: '#0c245c',
+    Block: '#fffb37'
+};
 
+let saveConfig = {
+    Back: appearanceConfig.Back,
+    Ground: appearanceConfig.Ground,
+    Block: appearanceConfig.Block
+};
 
 class FTSEApp extends BaseApp {
     constructor() {
         super();
+
+        this.baseName = "FTSEVizConfig";
+        this.messageTimer = 3 * 1000;
+    }
+
+    init(container) {
+        super.init(container);
+
+        //Load any preferences
+        let prefs = localStorage.getItem(this.baseName + "Saved");
+        if(prefs) {
+            let value;
+            for(let prop in appearanceConfig) {
+                value = localStorage.getItem(this.baseName + prop);
+                if(value) {
+                    this.setGUI(prop, value);
+                }
+            }
+            let colour = localStorage.getItem(this.baseName + "Back");
+            if(colour) {
+                this.renderer.setClearColor(colour, 1.0);
+            }
+        }
     }
 
     createScene() {
@@ -57,7 +90,7 @@ class FTSEApp extends BaseApp {
         //Main spindles
         let parent = new THREE.Object3D();
         let cylinderGeom = new THREE.CylinderBufferGeometry(CENTRE_RADIUS, CENTRE_RADIUS, CENTRE_HEIGHT, SEGMENTS);
-        this.spindleMat = new THREE.MeshLambertMaterial({color: 0xfffb37});
+        this.spindleMat = new THREE.MeshLambertMaterial({color: appearanceConfig.Block});
         this.spindleMatDisabled = new THREE.MeshLambertMaterial({color: 0x909090});
         let spindle = new THREE.Mesh(cylinderGeom, this.spindleMat);
         spindle.position.y += CENTRE_HEIGHT/2;
@@ -177,7 +210,7 @@ class FTSEApp extends BaseApp {
             let controlKit = new ControlKit();
 
             controlKit.addPanel({width: 200})
-                .addGroup({label: "Appearance", enable: false})
+                .addSubGroup({label: "Appearance", enable: false})
                     .addColor(appearanceConfig, "Back", {
                         colorMode: "hex", onChange: () => {
                             this.onBackgroundColourChanged(appearanceConfig.Back);
@@ -193,12 +226,21 @@ class FTSEApp extends BaseApp {
                             this.onBlockColourChanged(appearanceConfig.Block);
                         }
                     })
-                .addGroup( {label: "Settings", enable: false})
-                .addCheckbox(settingsConfig, "Animate", {
-                    onChange: () => {
-                        this.toggleAnimation();
-                    }
-                })
+                .addSubGroup( {label: "Settings", enable: false})
+                    .addCheckbox(settingsConfig, "Animate", {
+                        onChange: () => {
+                            this.toggleAnimation();
+                        }
+                    })
+                .addSubGroup( {label: "Preferences"})
+                    .addButton("Save", () => {
+                        for(let prop in saveConfig) {
+                            if(prop in appearanceConfig) {
+                                saveConfig[prop] = appearanceConfig[prop];
+                            }
+                        }
+                        this.savePreferences(saveConfig);
+                    })
         });
     }
 
@@ -217,6 +259,23 @@ class FTSEApp extends BaseApp {
         this.spindleMat.color.setStyle(colour);
     }
 
+    savePreferences(config) {
+        for(let prop in config) {
+            localStorage.setItem(this.baseName + prop, config[prop]);
+        }
+        localStorage.setItem(this.baseName + "Saved", "Saved");
+        this.displayMessage("Preferences saved");
+    }
+
+    setGUI(prop, value) {
+        let newValue = parseFloat(value);
+        if(isNaN(newValue)) {
+            appearanceConfig[prop] = value;
+            return;
+        }
+        appearanceConfig[prop] = newValue;
+    }
+
     toggleAnimation() {
         this.animate = !this.animate;
     }
@@ -225,7 +284,7 @@ class FTSEApp extends BaseApp {
         //Ground plane
         const GROUND_WIDTH = 1000, GROUND_HEIGHT = 640, SEGMENTS = 16;
         let groundGeom = new THREE.PlaneBufferGeometry(GROUND_WIDTH, GROUND_HEIGHT, SEGMENTS, SEGMENTS);
-        let groundMat = new THREE.MeshLambertMaterial( {color: 0x0c245c} );
+        let groundMat = new THREE.MeshLambertMaterial( {color: appearanceConfig.Ground} );
         let ground = new THREE.Mesh(groundGeom, groundMat);
         ground.name = "Ground";
         ground.rotation.x = -Math.PI/2;
@@ -616,6 +675,14 @@ class FTSEApp extends BaseApp {
         this.moveSpeed *= this.weeklyView ? -1 : 1;
         distance *= this.weeklyView ? -1 : 1;
         this.sceneMoveEnd = this.root.position.x + distance;
+    }
+
+    displayMessage(msg) {
+        $('#content').html(msg);
+        $('#message').show();
+        setTimeout( () => {
+            $('#message').hide();
+        }, this.messageTimer);
     }
 }
 
