@@ -147,7 +147,7 @@ class FTSEApp extends BaseApp {
         blockInfo.name = "weeklyBlock";
         this.addBlocks(blockInfo, this.weeklyColumns);
 
-        //Simple label
+        //Single label
         this.labelManager = new LabelManager();
         let position = new THREE.Vector3();
         //position.copy(this.columns[2].position);
@@ -167,6 +167,7 @@ class FTSEApp extends BaseApp {
             this.preProcessData();
             this.updateSceneDaily();
             this.setSceneWeekly();
+            this.addPriceLabels();
             this.addDateLabels();
             this.addWeekLabels();
         });
@@ -218,6 +219,32 @@ class FTSEApp extends BaseApp {
                 labelProperty.textColour = "rgba(255, 165, 0, 1.0)";
                 if(data[labelNumber] === undefined) break;
                 label = this.labelManager.create("dateLabel" + labelNumber, data[labelNumber][0], labelProperty);
+                this.parentGroupDaily.add(label.getSprite());
+                ++labelNumber
+            }
+        }
+    }
+
+    addPriceLabels() {
+        let labelProperty;
+        let scale = new THREE.Vector3(20, 10, 1);
+        let label, labelNumber = 0, labelOffsetY = 7, price;
+        let data = this.data[this.currentMonthDaily].shares;
+
+        for(let segment=0; segment<NUM_SEGMENTS; ++segment) {
+            for(let i=0; i<NUM_COLUMNS_PER_SEGMENT; ++i) {
+                labelProperty = {};
+                labelProperty.position = new THREE.Vector3();
+                labelProperty.position.copy(this.getBlockPosition(segment, i, this.WALL_RADIUS));
+                labelProperty.position.y += (this.getBlockHeight(labelNumber) * 2);
+                labelProperty.position.y += labelOffsetY;
+                labelProperty.scale = scale;
+                labelProperty.multiLine = false;
+                labelProperty.visibility = true;
+                if(data[labelNumber] === undefined) break;
+                price = this.getShareText(labelNumber);
+                if(!price) price = "";
+                label = this.labelManager.create("priceLabel" + labelNumber, price, labelProperty);
                 this.parentGroupDaily.add(label.getSprite());
                 ++labelNumber
             }
