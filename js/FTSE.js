@@ -22,6 +22,7 @@ class FTSEApp extends BaseApp {
         this.messageTimer = 3 * 1000;
         this.zoomingOut = false;
         this.zoomingIn = false;
+        this.showLabels = true;
     }
 
     init(container) {
@@ -270,7 +271,9 @@ class FTSEApp extends BaseApp {
                 Block: '#fffb37'
             };
             let settingsConfig = {
-              Animate: true
+              Animate: true,
+              Labels: true,
+              Prices: false
             };
 
             let controlKit = new ControlKit();
@@ -296,6 +299,16 @@ class FTSEApp extends BaseApp {
                     .addCheckbox(settingsConfig, "Animate", {
                         onChange: () => {
                             this.toggleAnimation();
+                        }
+                    })
+                    .addCheckbox(settingsConfig, "Labels", {
+                        onChange: () => {
+                            this.toggleLabels();
+                        }
+                    })
+                    .addCheckbox(settingsConfig, "Prices", {
+                        onChange: () => {
+                            this.togglePrices();
                         }
                     })
                 .addSubGroup( {label: "Preferences"})
@@ -344,6 +357,28 @@ class FTSEApp extends BaseApp {
 
     toggleAnimation() {
         this.animate = !this.animate;
+    }
+
+    toggleLabels() {
+        this.showLabels = !this.showLabels;
+
+        let dateName = "dateLabel", weekLabel = "weeklyLabel";
+        let label;
+        let totalLabels = NUM_SEGMENTS * NUM_COLUMNS_PER_SEGMENT;
+        for(let i=0; i<totalLabels; ++i) {
+            label = this.labelManager.getLabel(dateName + i);
+            if(label) {
+                label.setVisibility(this.showLabels);
+            }
+            label = this.labelManager.getLabel(weekLabel + i);
+            if(label) {
+                label.setVisibility(this.showLabels);
+            }
+        }
+    }
+
+    togglePrices() {
+
     }
 
     addGround() {
@@ -601,6 +636,7 @@ class FTSEApp extends BaseApp {
                     this.moveSpeed = this.MOVE_INC / this.SCENE_MOVE_TIME;
                 } else {
                     this.sceneMoving = false;
+                    this.MOVE_INC *= -1;
                     this.moveSpeed = MOVE_SPEED;
                 }
             }
