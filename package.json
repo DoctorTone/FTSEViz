@@ -1,0 +1,27 @@
+{
+  "name": "ftseviz",
+  "version": "1.0.0",
+  "description": "Financial data visualisation",
+  "main": "index.js",
+  "dependencies": {
+    "babel-core": "^6.26.0"
+  },
+  "devDependencies": {
+    "babel-preset-env": "^1.6.0",
+    "gulp": "^3.9.1",
+    "gulp-babel": "^7.0.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DoctorTone/FTSEViz.git"
+  },
+  "author": "Dr Tony Glover",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/DoctorTone/FTSEViz/issues"
+  },
+  "homepage": "https://github.com/DoctorTone/FTSEViz#readme"
+}
