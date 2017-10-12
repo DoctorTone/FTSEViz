@@ -230,6 +230,17 @@ class FTSEApp extends BaseApp {
         }
     }
 
+    clearDateLabels() {
+        let totalLabels = NUM_SEGMENTS * NUM_COLUMNS_PER_SEGMENT;
+        let label, labelName = "dateLabel";
+        for(let i=0; i<totalLabels; ++i) {
+            label = this.labelManager.getLabel(labelName + i);
+            if(label) {
+                label.setText("");
+            }
+        }
+    }
+
     addPriceLabels() {
         let labelProperty;
         let scale = new THREE.Vector3(20, 10, 1);
@@ -280,6 +291,7 @@ class FTSEApp extends BaseApp {
     }
 
     updateDateLabels() {
+        this.clearDateLabels();
         let label, baseName = "dateLabel", labelNumber = 0, dayNumber = 0;
         let month = this.currentMonthDaily;
         let data = this.data[month].shares;
