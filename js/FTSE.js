@@ -431,12 +431,19 @@ class FTSEApp extends BaseApp {
     togglePrices() {
         this.showPrices = !this.showPrices;
 
-        let label, labelName = "priceLabel";
+        let label, labelName = "priceLabel", text;
         let totalLabels = NUM_SEGMENTS * NUM_COLUMNS_PER_SEGMENT;
         for(let i=0; i<totalLabels; ++i) {
             label = this.labelManager.getLabel(labelName + i);
             if(label) {
                 label.setVisibility(this.showPrices);
+                if(this.showPrices) {
+                    text = this.getShareText(i);
+                    if(text) {
+                        label.setText(text);
+                        label.setHeight((this.getBlockHeight(i) * 2) + 6);
+                    }
+                }
             }
         }
     }

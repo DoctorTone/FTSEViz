@@ -88,6 +88,10 @@ class Label {
         this.sprite.position.y *= yScale;
     }
 
+    setHeight(height) {
+        this.sprite.position.y = height;
+    }
+
     offsetY(offset) {
         this.sprite.position.y += offset;
     }
