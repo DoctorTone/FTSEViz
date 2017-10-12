@@ -203,7 +203,7 @@ class FTSEApp extends BaseApp {
     }
 
     addDateLabels() {
-        let labelProperty;
+        let labelProperty, text;
         let scale = new THREE.Vector3(20, 10, 1);
         let label, labelNumber = 0, labelOffsetY = 5;
         let data = this.data[this.currentMonthDaily].shares;
@@ -218,8 +218,12 @@ class FTSEApp extends BaseApp {
                 labelProperty.multiLine = false;
                 labelProperty.visibility = true;
                 labelProperty.textColour = "rgba(255, 165, 0, 1.0)";
-                if(data[labelNumber] === undefined) break;
-                label = this.labelManager.create("dateLabel" + labelNumber, data[labelNumber][0], labelProperty);
+                if(data[labelNumber] === undefined) {
+                    text = "";
+                } else {
+                    text = data[labelNumber][0];
+                }
+                label = this.labelManager.create("dateLabel" + labelNumber, text, labelProperty);
                 this.parentGroupDaily.add(label.getSprite());
                 ++labelNumber
             }
@@ -276,14 +280,18 @@ class FTSEApp extends BaseApp {
     }
 
     updateDateLabels() {
-        let label, baseName = "dateLabel", labelNumber = 0;
-        let data = this.data[this.currentMonthDaily].shares;
+        let label, baseName = "dateLabel", labelNumber = 0, dayNumber = 0;
+        let month = this.currentMonthDaily;
+        let data = this.data[month].shares;
+        let start = this.data[month].startSlot, end = this.data[month].endSlot + (4 *NUM_COLUMNS_PER_SEGMENT);
+        let text;
 
         for(let segment=0; segment<NUM_SEGMENTS; ++segment) {
             for (let i = 0; i < NUM_COLUMNS_PER_SEGMENT; ++i) {
                 label = this.labelManager.getLabel(baseName + labelNumber);
                 if(label) {
-                    label.setText(data[labelNumber][0]);
+                    text = labelNumber < start ? "" : data[dayNumber++][0];
+                    label.setText(text);
                 }
                 ++labelNumber;
             }
@@ -516,6 +524,14 @@ class FTSEApp extends BaseApp {
                 this.disableBlock(i);
             }
         }
+        if(end < 0) {
+            //Disable last week
+            let segment = 4 * this.BLOCKS_PER_SEGMENT;
+            for(i=segment; i<this.NUM_BLOCKS; ++i) {
+                this.disableBlock(i);
+            }
+        }
+
         if (end < (this.BLOCKS_PER_SEGMENT - 1)) {
             let segment = 4 * this.BLOCKS_PER_SEGMENT;
             for (i = segment + end + 1; i < this.NUM_BLOCKS; ++i) {
