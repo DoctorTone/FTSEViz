@@ -257,9 +257,12 @@ class FTSEApp extends BaseApp {
                 labelProperty.scale = scale;
                 labelProperty.multiLine = false;
                 labelProperty.visibility = false;
-                if(data[labelNumber] === undefined) break;
-                price = this.getShareText(labelNumber);
-                if(!price) price = "";
+                if(data[labelNumber] === undefined) {
+                    price = "No data";
+                } else {
+                    price = this.getShareText(labelNumber);
+                    if(!price) price = "";
+                }
                 label = this.labelManager.create("priceLabel" + labelNumber, price, labelProperty);
                 this.parentGroupDaily.add(label.getSprite());
                 ++labelNumber
@@ -650,6 +653,15 @@ class FTSEApp extends BaseApp {
     getShareText(block) {
         let prices = this.weeklyView ? this.realWeeklyPricesPerMonth[this.currentMonthWeekly] :
             this.realDailyPricesPerMonth[this.currentMonthDaily];
+
+        let start = 0;
+        if(!this.weeklyView) {
+            start = this.data[this.currentMonthDaily].startSlot;
+            block -= start;
+            if(block <0) {
+                return "No Data";
+            }
+        }
         return prices[block];
     }
 
