@@ -23,6 +23,7 @@ class FTSEApp extends BaseApp {
         this.zoomingOut = false;
         this.zoomingIn = false;
         this.showLabels = true;
+        this.showPrices = false;
     }
 
     init(container) {
@@ -240,7 +241,7 @@ class FTSEApp extends BaseApp {
                 labelProperty.position.y += labelOffsetY;
                 labelProperty.scale = scale;
                 labelProperty.multiLine = false;
-                labelProperty.visibility = true;
+                labelProperty.visibility = false;
                 if(data[labelNumber] === undefined) break;
                 price = this.getShareText(labelNumber);
                 if(!price) price = "";
@@ -405,7 +406,16 @@ class FTSEApp extends BaseApp {
     }
 
     togglePrices() {
+        this.showPrices = !this.showPrices;
 
+        let label, labelName = "priceLabel";
+        let totalLabels = NUM_SEGMENTS * NUM_COLUMNS_PER_SEGMENT;
+        for(let i=0; i<totalLabels; ++i) {
+            label = this.labelManager.getLabel(labelName + i);
+            if(label) {
+                label.setVisibility(this.showPrices);
+            }
+        }
     }
 
     addGround() {
