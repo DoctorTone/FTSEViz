@@ -609,6 +609,7 @@ class FTSEApp extends BaseApp {
         for(let block=0, numBlocks=this.columns.length; block<numBlocks; ++block) {
             this.columns[block].material = this.spindleMat;
             this.columns[block].scale.set(1, 1, 1);
+            this.columns[block].position.y = 0.5;
         }
     }
 
