@@ -34,7 +34,10 @@ class BaseApp {
         this.createRenderer();
         this.createCamera();
         this.createControls();
-        //this.stats = initStats();
+        /*
+        this.stats = new Stats();
+        container.appendChild(this.stats.dom);
+        */
         this.statsShowing = false;
         //$("#Stats-output").hide();
     }
@@ -208,6 +211,7 @@ class BaseApp {
     update() {
         //Do any updates
         this.controls.update();
+        //this.stats.update();
     }
 
     run() {
