@@ -700,7 +700,7 @@ class FTSEApp extends BaseApp {
         }
 
         this.currentLabel.setVisibility(false);
-        if(this.hoverObjects.length) {
+        if(this.hoverObjects.length && !this.showPrices) {
             let text = this.hoverObjects[0].object.name;
             //DEBUG
             //console.log("Hovered over ", text);
