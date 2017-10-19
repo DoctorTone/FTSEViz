@@ -26,3 +26,5 @@ const WEEKLY_Y = 0;
 const WEEKLY_Z = 0;
 const DISPLAY_MONTHS = 5;
 const MOVE_SPEED = 20;
+const MOBILE_OFFSET_Z = 280;
+const MOBILE_OFFSET_Y = 50;

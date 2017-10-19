@@ -50,6 +50,8 @@ class FTSEApp extends BaseApp {
         //Init base createsScene
         super.createScene();
 
+        this.fitToScreen();
+
         //Set up main scene
         this.WALL_RADIUS = WALL_DEPTH;
         this.DIVS_PER_SEGMENT = 6;
@@ -168,10 +170,19 @@ class FTSEApp extends BaseApp {
             this.preProcessData();
             this.updateSceneDaily();
             this.setSceneWeekly();
-            this.addPriceLabels();
+            this.addPriceDailyLabels();
+            this.addPriceWeeklyLabels();
             this.addDateLabels();
             this.addWeekLabels();
         });
+    }
+
+    fitToScreen() {
+        //If in portrait mode then move camera
+        if(window.innerHeight > window.innerWidth) {
+            this.camera.position.z += MOBILE_OFFSET_Z;
+            this.camera.position.y += MOBILE_OFFSET_Y;
+        }
     }
 
     addSpindle(spindleInfo) {
@@ -225,7 +236,7 @@ class FTSEApp extends BaseApp {
                 }
                 label = this.labelManager.create("dateLabel" + labelNumber, text, labelProperty);
                 this.parentGroupDaily.add(label.getSprite());
-                ++labelNumber
+                ++labelNumber;
             }
         }
     }
@@ -241,7 +252,7 @@ class FTSEApp extends BaseApp {
         }
     }
 
-    addPriceLabels() {
+    addPriceDailyLabels() {
         let labelProperty;
         let scale = new THREE.Vector3(20, 10, 1);
         let label, labelNumber = 0, labelOffsetY = 7, price;
@@ -261,11 +272,40 @@ class FTSEApp extends BaseApp {
                     price = "No data";
                 } else {
                     price = this.getShareText(labelNumber);
-                    if(!price) price = "";
+                    if(price === undefined) price = "";
                 }
-                label = this.labelManager.create("priceLabel" + labelNumber, price, labelProperty);
+                label = this.labelManager.create("priceDailyLabel" + labelNumber, price, labelProperty);
                 this.parentGroupDaily.add(label.getSprite());
-                ++labelNumber
+                ++labelNumber;
+            }
+        }
+    }
+
+    addPriceWeeklyLabels() {
+        let labelProperty;
+        let scale = new THREE.Vector3(20, 10, 1);
+        let label, labelNumber = 0, labelOffsetY = 7, price;
+        let data = this.data[this.currentMonthWeekly].sharesWeekly;
+
+        for(let segment=0; segment<NUM_SEGMENTS; ++segment) {
+            for(let i=0; i<NUM_COLUMNS_PER_SEGMENT; ++i) {
+                labelProperty = {};
+                labelProperty.position = new THREE.Vector3();
+                labelProperty.position.copy(this.getBlockPosition(segment, i, this.WALL_RADIUS));
+                labelProperty.position.y += (this.getBlockHeight(labelNumber) * 2);
+                labelProperty.position.y += labelOffsetY;
+                labelProperty.scale = scale;
+                labelProperty.multiLine = false;
+                labelProperty.visibility = false;
+                if(data[labelNumber] === undefined) {
+                    price = "No data";
+                } else {
+                    price = this.getShareText(labelNumber);
+                    if(price === undefined) price = "";
+                }
+                label = this.labelManager.create("priceWeeklyLabel" + labelNumber, price, labelProperty);
+                this.parentGroupWeekly.add(label.getSprite());
+                ++labelNumber;
             }
         }
     }
@@ -305,7 +345,7 @@ class FTSEApp extends BaseApp {
             for (let i = 0; i < NUM_COLUMNS_PER_SEGMENT; ++i) {
                 label = this.labelManager.getLabel(baseName + labelNumber);
                 if(label) {
-                    text = labelNumber < start ? "" : data[dayNumber++][0];
+                    text = labelNumber > end ? "" : labelNumber < start ? "" : data[dayNumber++][0];
                     label.setText(text);
                 }
                 ++labelNumber;
@@ -329,7 +369,7 @@ class FTSEApp extends BaseApp {
 
             let controlKit = new ControlKit();
 
-            controlKit.addPanel({width: 200})
+            controlKit.addPanel({width: window.innerWidth * 0.25})
                 .addSubGroup({label: "Appearance", enable: false})
                     .addColor(appearanceConfig, "Back", {
                         colorMode: "hex", onChange: () => {
@@ -431,16 +471,21 @@ class FTSEApp extends BaseApp {
     togglePrices() {
         this.showPrices = !this.showPrices;
 
-        let label, labelName = "priceLabel", text;
+        this.showPriceLabels(this.showPrices);
+    }
+
+    showPriceLabels(visible) {
+        let labelName = this.weeklyView ? "priceWeeklyLabel" : "priceDailyLabel";
+        let label, text;
         let totalLabels = NUM_SEGMENTS * NUM_COLUMNS_PER_SEGMENT;
         for(let i=0; i<totalLabels; ++i) {
             label = this.labelManager.getLabel(labelName + i);
             if(label) {
-                label.setVisibility(this.showPrices);
-                if(this.showPrices) {
+                label.setVisibility(visible);
+                if(visible) {
                     text = this.getShareText(i);
                     if(text) {
-                        label.setText(text);
+                        label.setText(text < 0 ? "" : text);
                         label.setHeight((this.getBlockHeight(i) * 2) + 6);
                     }
                 }
@@ -669,6 +714,8 @@ class FTSEApp extends BaseApp {
             if(block <0) {
                 return "No Data";
             }
+        } else {
+            block = block % NUM_COLUMNS_PER_SEGMENT;
         }
         return prices[block];
     }
@@ -684,7 +731,8 @@ class FTSEApp extends BaseApp {
     }
 
     getBlockHeight(block) {
-        let currentBlock = this.columns[block];
+        let columns = this.weeklyView ? this.weeklyColumns : this.columns;
+        let currentBlock = columns[block];
         return currentBlock.position.y;
     }
 
@@ -723,6 +771,7 @@ class FTSEApp extends BaseApp {
                     this.sceneMoving = false;
                     this.MOVE_INC *= -1;
                     this.moveSpeed = MOVE_SPEED;
+                    this.showPriceLabels(this.showPrices);
                 }
             }
         }
@@ -756,10 +805,14 @@ class FTSEApp extends BaseApp {
             if(text.indexOf("Block") < 0) return;
 
             let index = text.match(/\d+$/);
-            if(!index) return;
+            index = index.join("");
+            index = parseInt(index);
+            if(isNaN(index)) {
+                return;
+            }
 
-            text = this.getShareText(index[0]);
-            if(!text) text = "No data";
+            text = this.getShareText(index);
+            if(text === undefined) text = "No data";
             this.currentLabel.setWorldPosition(this.hoverObjects[0].object.matrixWorld);
             let height = this.getBlockHeight(index);
             this.currentLabel.offsetY(height + 6);
@@ -770,7 +823,7 @@ class FTSEApp extends BaseApp {
 
     previousSegment() {
         //Move to previous segment
-        if(this.sceneRotating) return;
+        if(this.sceneRotating || this.sceneMoving || this.viewMoving) return;
 
         this.rotateGroup = this.weeklyView ? this.parentGroupWeekly : this.parentGroupDaily;
         this.rotSpeed = this.ROT_INC_DAILY / this.SCENE_ROTATE_TIME;
@@ -790,7 +843,7 @@ class FTSEApp extends BaseApp {
 
     nextSegment() {
         //Move to next segment
-        if(this.sceneRotating) return;
+        if(this.sceneRotating || this.sceneMoving || this.viewMoving) return;
 
         this.rotSpeed = -this.ROT_INC_DAILY / this.SCENE_ROTATE_TIME;
         this.rotateGroup = this.weeklyView ? this.parentGroupWeekly : this.parentGroupDaily;
@@ -810,11 +863,12 @@ class FTSEApp extends BaseApp {
 
     nextMonth() {
         //Animate to show next month
-        if(this.sceneMoving) return;
+        if(this.sceneRotating || this.sceneMoving || this.viewMoving) return;
 
         if(this.weeklyView) {
             ++this.currentMonthWeekly;
             if(this.currentMonthWeekly > MONTHS.DECEMBER) this.currentMonthWeekly = MONTHS.JANUARY;
+            this.showPriceLabels(this.showPrices);
             this.nextSegment();
             return;
         }
@@ -830,7 +884,7 @@ class FTSEApp extends BaseApp {
 
     previousMonth() {
         //Animate to show next month
-        if(this.sceneMoving) return;
+        if(this.sceneRotating || this.sceneMoving || this.viewMoving) return;
 
         if(this.weeklyView) {
             --this.currentMonthWeekly;
@@ -848,8 +902,10 @@ class FTSEApp extends BaseApp {
     }
 
     toggleView() {
-        this.weeklyView = !this.weeklyView;
+        if(this.sceneRotating || this.sceneMoving || this.viewMoving) return;
+
         this.viewMoving = true;
+        this.weeklyView = !this.weeklyView;
         this.moveToView();
     }
 
@@ -925,19 +981,37 @@ $(document).ready( () => {
         app.toggleView();
     });
 
-    $('#zoomOut').on("mousedown", () => {
+    let zoomOutElement = $('#zoomOut');
+    let zoomInElement = $('#zoomIn');
+    zoomOutElement.on("mousedown", () => {
         app.zoomOut(true);
     });
 
-    $('#zoomOut').on("mouseup", () => {
+    zoomOutElement.on("mouseup", () => {
         app.zoomOut(false);
     });
 
-    $('#zoomIn').on("mousedown", () => {
+    zoomOutElement.on("touchstart", () => {
+        app.zoomOut(true);
+    });
+
+    zoomOutElement.on("touchend", () => {
+        app.zoomOut(false);
+    });
+
+    zoomInElement.on("mousedown", () => {
         app.zoomIn(true);
     });
 
-    $('#zoomIn').on("mouseup", () => {
+    zoomInElement.on("mouseup", () => {
+        app.zoomIn(false);
+    });
+
+    zoomInElement.on("touchstart", () => {
+        app.zoomIn(true);
+    });
+
+    zoomInElement.on("touchend", () => {
         app.zoomIn(false);
     });
 
