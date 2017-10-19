@@ -371,7 +371,7 @@ class FTSEApp extends BaseApp {
             const GUI_WIDTH_PERCENT = 30/100;
             let controlKit = new ControlKit();
 
-            controlKit.addPanel({label: "Configuration", width: window.innerWidth * GUI_WIDTH_PERCENT})
+            controlKit.addPanel({label: "Configuration", width: window.innerWidth * GUI_WIDTH_PERCENT, enable: false})
                 .addSubGroup({label: "Appearance", enable: false})
                     .addColor(appearanceConfig, "Back", {
                         colorMode: "hex", onChange: () => {
