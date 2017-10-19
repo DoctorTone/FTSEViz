@@ -42,8 +42,8 @@ body {
     font-size: 6vw;
 }
 #dateControls {
-    bottom: 1%;
-    right: 1%;
+    bottom: 0%;
+    right: 0%;
     width: 30%;
     background-color: #3c3c3c;
     border-radius: 10px;
@@ -140,5 +140,67 @@ body {
     }
     #instructions img {
         width: 60%;
+    }
+}
+@media (min-width: 568px) and (orientation: portrait) {
+    #dateControls {
+        width: 27.5%;
+    }
+    #dateControls p {
+        font-size: 2vw;
+    }
+}
+@media (min-width: 768px) {
+    #info {
+        width: 17.5%;
+        font-size: 1.75vw;
+    }
+    #dateControls{
+        padding: 0;
+    }
+    #dateControls div {
+        margin-bottom: 1%;
+    }
+    #title {
+        font-size: 3.5vw;
+    }
+    #copyright {
+        left: 11%;
+    }
+}
+@media (min-width: 1200px) {
+    #info {
+        width: 15%;
+        font-size: 1.5vw;
+    }
+    #dateControls {
+        line-height: 50%;
+        width: 10%;
+        padding-bottom: 1%;
+        font-size: 3.25vw;
+    }
+    #dateControls button {
+        padding: 0;
+        width: 33%;
+    }
+    #dateControls img {
+        width: 35%;
+    }
+    #dateControls p {
+        margin: 0;
+        padding: 0;
+        font-size: 1.5vw;
+    }
+    #dateControls div {
+        margin-bottom: 0%;
+    }
+    #viewControl button {
+        width: 45%;
+        padding: 0% 0;
+        font-size: 1.25vw;
+    }
+    #copyright {
+        font-size: 1.75vw;
+        left: 7.5%;
     }
 }

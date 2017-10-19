@@ -31,6 +31,6 @@ const CAM_POS_NEAR_Y = 110;
 const CAM_POS_NEAR_Z = 280;
 const CAM_POS_FAR_X = -250;
 const CAM_POS_FAR_Y = 160;
-const CAM_POS_FAR_Z = 560;
+const CAM_POS_FAR_Z = 500;
 const NEAR = 0;
 const FAR = 1;
