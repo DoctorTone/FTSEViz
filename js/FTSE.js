@@ -1021,6 +1021,10 @@ $(document).ready( () => {
         $('#myModal').modal();
     });
 
+    $('#dateControls').contextmenu(() => {
+        return false;
+    });
+
     app.run();
 
 });
