@@ -180,8 +180,9 @@ class FTSEApp extends BaseApp {
     fitToScreen() {
         //If in portrait mode then move camera
         if(window.innerHeight > window.innerWidth) {
-            this.camera.position.z += MOBILE_OFFSET_Z;
-            this.camera.position.y += MOBILE_OFFSET_Y;
+            this.setCamera(FAR);
+        } else {
+            this.setCamera(NEAR);
         }
     }
 
@@ -367,9 +368,10 @@ class FTSEApp extends BaseApp {
               Prices: false
             };
 
+            const GUI_WIDTH_PERCENT = 30/100;
             let controlKit = new ControlKit();
 
-            controlKit.addPanel({width: window.innerWidth * 0.25})
+            controlKit.addPanel({label: "Configuration", width: window.innerWidth * GUI_WIDTH_PERCENT})
                 .addSubGroup({label: "Appearance", enable: false})
                     .addColor(appearanceConfig, "Back", {
                         colorMode: "hex", onChange: () => {

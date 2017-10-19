@@ -126,6 +126,7 @@ class BaseApp {
         this.camera.updateProjectionMatrix();
 
         this.renderer.setSize( window.innerWidth, window.innerHeight);
+        this.fitToScreen();
     }
 
     createScene() {
@@ -166,11 +167,14 @@ class BaseApp {
     }
 
     createCamera() {
-        const CAM_X = -250, CAM_Y = 110, CAM_Z = 280;
+        //const CAM_X = -250, CAM_Y = 110, CAM_Z = 280;
+        let camNear = new THREE.Vector3(CAM_POS_NEAR_X, CAM_POS_NEAR_Y, CAM_POS_NEAR_Z);
+        let camFar = new THREE.Vector3(CAM_POS_FAR_X, CAM_POS_FAR_Y, CAM_POS_FAR_Z);
         const NEAR_PLANE = 0.1, FAR_PLANE = 10000;
-        this.defaultCamPos = new THREE.Vector3(CAM_X, CAM_Y, CAM_Z);
         this.camera = new THREE.PerspectiveCamera(45, this.container.clientWidth / window.innerHeight, NEAR_PLANE, FAR_PLANE );
-        this.camera.position.copy(this.defaultCamPos);
+        this.camera.position.copy(camNear);
+        this.camPosNear = camNear;
+        this.camPosFar = camFar;
     }
 
     moveCamera(rotation) {
@@ -203,9 +207,9 @@ class BaseApp {
         this.controls.setLookAt(lookAt);
     }
 
-    setCamera(cameraProp) {
-        this.camera.position.set(cameraProp[0].x, cameraProp[0].y, cameraProp[0].z);
-        this.controls.setLookAt(cameraProp[1]);
+    setCamera(mode) {
+        let camPos = mode === NEAR ? this.camPosNear : this.camPosFar;
+        this.camera.position.copy(camPos);
     }
 
     update() {
