@@ -1037,6 +1037,7 @@ $(document).ready( () => {
 
     let elemList = ["dateControls", "info", "instructions"];
     app.stopNotifications(elemList);
+
     app.run();
 
 });
