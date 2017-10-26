@@ -368,10 +368,12 @@ class FTSEApp extends BaseApp {
               Prices: false
             };
 
-            const GUI_WIDTH_PERCENT = 20/100;
+            let guiWidth = $('#guiWidth').css("width");
+            guiWidth = parseInt(guiWidth, 10);
+            if(!guiWidth) guiWidth = window.innerWidth * 0.1;
             let controlKit = new ControlKit();
 
-            controlKit.addPanel({label: "Configuration", width: window.innerWidth * GUI_WIDTH_PERCENT, enable: true})
+            controlKit.addPanel({label: "Configuration", width: guiWidth, enable: false})
                 .addSubGroup({label: "Appearance", enable: false})
                     .addColor(appearanceConfig, "Back", {
                         colorMode: "hex", onChange: () => {
