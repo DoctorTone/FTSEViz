@@ -34,3 +34,4 @@ const CAM_POS_FAR_Y = 160;
 const CAM_POS_FAR_Z = 500;
 const NEAR = 0;
 const FAR = 1;
+const MOBILE_WIDTH = 768;

@@ -951,12 +951,24 @@ class FTSEApp extends BaseApp {
             $('#message').hide();
         }, this.messageTimer);
     }
+
+    stopNotifications(elemList) {
+        for(let i=0, numElems=elemList.length; i<numElems; ++i) {
+            $('#' + elemList[i]).contextmenu(() => {
+                return false;
+            });
+        }
+    }
 }
 
 $(document).ready( () => {
     if(!Detector.webgl) {
         $('#notSupported').show();
         return;
+    }
+
+    if(window.innerWidth < MOBILE_WIDTH) {
+        $('#mainModal').modal();
     }
 
     let container = document.getElementById("WebGL-output");
@@ -1023,10 +1035,8 @@ $(document).ready( () => {
         $('#myModal').modal();
     });
 
-    $('#dateControls').contextmenu(() => {
-        return false;
-    });
-
+    let elemList = ["dateControls", "info", "instructions"];
+    app.stopNotifications(elemList);
     app.run();
 
 });
