@@ -48,6 +48,7 @@ body {
     background-color: #3c3c3c;
     border-radius: 10px;
     padding: 0.75%;
+    -webkit-touch-callout: none;
 }
 #dateControls p {
     font-size: 3.5vw;
@@ -107,14 +108,17 @@ body {
     width: 45%;
 }
 #notSupported {
-    top: 20%;
+    top: 40%;
     left: 12.5%;
     width: 75%;
     background-color: #3e3e3e;
     color: white;
-    font-size: 1.25vw;
+    font-size: 2.5vw;
     border-radius: 15px;
     padding: 1%;
+}
+#notSupported p img {
+    width: 25%;
 }
 #copyright {
     left: 17.5%;
@@ -153,10 +157,17 @@ body {
         left: 12.5%;
     }
     #instructions img {
-        width: 50%;
+        width: 40%;
     }
     #guiWidth {
         width: 25%;
+    }
+    #notSupported {
+        top: 35%;
+        font-size: 2.25vw;
+    }
+    #notSupported p img {
+        width: 20%;
     }
 }
 @media (min-width: 568px) and (orientation: portrait) {
@@ -165,6 +176,13 @@ body {
     }
     #dateControls p {
         font-size: 2vw;
+    }
+    #notSupported {
+        top: 35%;
+        font-size: 2.5vw;
+    }
+    #notSupported p img {
+        width: 25%;
     }
 }
 @media (min-width: 768px) {
@@ -189,6 +207,13 @@ body {
     #info {
         width: 22.5%;
         font-size: 2.25vw;
+    }
+    #notSupported {
+        top: 35%;
+        font-size: 2.75vw;
+    }
+    #notSupported p img {
+        width: 30%;
     }
 }
 @media (min-width: 1200px) {
@@ -226,6 +251,13 @@ body {
         font-size: 1.75vw;
         left: 7.5%;
     }
+    #notSupported {
+        top: 30%;
+        font-size: 2.25vw;
+    }
+    #notSupported p img {
+        width: 20%;
+    }
 }
 @media (min-width: 1680px) {
     #dateControls {
@@ -234,5 +266,12 @@ body {
     }
     #guiWidth {
         width: 15%;
+    }
+    #notSupported {
+        top: 30%;
+        font-size: 1.75vw;
+    }
+    #notSupported p img {
+        width: 12.5%;
     }
 }

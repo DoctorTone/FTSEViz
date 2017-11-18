@@ -49,7 +49,7 @@ gulp.task("compress-css", function() {
 gulp.task("compress-html", function() {
     gulp.src("temp/*.html")
         .pipe(htmlmin( {collapseWhitespace: true} ))
-        .pipe(gulp.dest("build"))
+        .pipe(gulp.dest("dist"))
 });
 
 gulp.task("min-copy", function() {
