@@ -74,7 +74,7 @@ gulp.task("concatJS", function() {
 });
 
 gulp.task("concatCSS", function() {
-    gulp.src(["build/css/FTSEStyles.min.css", "build/css/bootstrap.min.css", "build/css/bootstrap-theme.min.css"])
+    gulp.src(["build/css/FTSEStyles.min.css", "build/css/bootstrap.min.css"])
         .pipe(concat("build.min.css"))
         .pipe(gulp.dest("dist/css/"));
 });
