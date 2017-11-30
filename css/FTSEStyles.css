@@ -123,10 +123,11 @@ body {
     width: 25%;
 }
 #copyright {
-    left: 17.5%;
-    bottom: 2.5%;
+    left: 15%;
+    bottom: 1.5%;
     color: white;
-    font-size: 2.5vw;
+    font-size: 3.5vw;
+    -webkit-touch-callout: none;
 }
 #guiWidth {
     position: absolute;
@@ -156,7 +157,8 @@ body {
         font-size: 2vw;
     }
     #copyright {
-        left: 12.5%;
+        font-size: 2.25vw;
+        left: 11%;
     }
     #instructions {
         width: 7%;
@@ -189,6 +191,10 @@ body {
     #instructions {
         width: 10%;
     }
+    #copyright {
+        font-size: 2.75vw;
+        left: 12.5%;
+    }
 }
 @media (min-width: 768px) {
     #info {
@@ -205,7 +211,8 @@ body {
         font-size: 3.5vw;
     }
     #copyright {
-        left: 11%;
+        font-size: 2vw;
+        left: 10%;
     }
 }
 @media (min-width: 768px) and (orientation: portrait) {
@@ -219,6 +226,10 @@ body {
     }
     #notSupported p img {
         width: 30%;
+    }
+    #copyright {
+        font-size: 2.5vw;
+        left: 12%;
     }
 }
 @media (min-width: 1200px) {
@@ -253,7 +264,7 @@ body {
         font-size: 1.25vw;
     }
     #copyright {
-        font-size: 1.75vw;
+        font-size: 1.5vw;
         left: 7.5%;
     }
     #notSupported {
@@ -284,5 +295,8 @@ body {
     }
     #instructions {
         width: 4.5%;
+    }
+    #copyright {
+        font-size: 1.25vw;
     }
 }
