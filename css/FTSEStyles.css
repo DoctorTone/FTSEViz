@@ -102,10 +102,12 @@ body {
 }
 #instructions {
     left: 1%;
-    bottom: 2%;
+    bottom: 1%;
+    width: 12.5%;
+    -webkit-touch-callout: none;
 }
 #instructions img {
-    width: 45%;
+    width: 100%;
 }
 #notSupported {
     top: 40%;
@@ -156,8 +158,8 @@ body {
     #copyright {
         left: 12.5%;
     }
-    #instructions img {
-        width: 40%;
+    #instructions {
+        width: 7%;
     }
     #guiWidth {
         width: 25%;
@@ -183,6 +185,9 @@ body {
     }
     #notSupported p img {
         width: 25%;
+    }
+    #instructions {
+        width: 10%;
     }
 }
 @media (min-width: 768px) {
@@ -258,6 +263,9 @@ body {
     #notSupported p img {
         width: 20%;
     }
+    #instructions {
+        width: 5%;
+    }
 }
 @media (min-width: 1680px) {
     #dateControls {
@@ -273,5 +281,8 @@ body {
     }
     #notSupported p img {
         width: 12.5%;
+    }
+    #instructions {
+        width: 4.5%;
     }
 }
