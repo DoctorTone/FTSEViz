@@ -1,6 +1,9 @@
 /**
  * Created by DrTone on 06/07/2017.
  */
+import $ from "jquery";
+import * as THREE from "three";
+import { BaseApp } from "./baseApp";
 
 let appearanceConfig = {
     Back: '#5c5f64',

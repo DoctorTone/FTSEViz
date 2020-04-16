@@ -1,23 +1,8 @@
 {
   "name": "ftseviz",
   "version": "1.0.0",
-  "description": "Financial data visualisation",
-  "main": "index.js",
-  "dependencies": {
-    "babel-core": "^6.26.0"
-  },
-  "devDependencies": {
-    "babel-preset-env": "^1.6.0",
-    "gulp": "^3.9.1",
-    "gulp-babel": "^7.0.0",
-    "gulp-changed": "^3.1.0",
-    "gulp-clean-css": "^3.9.0",
-    "gulp-concat": "^2.6.1",
-    "gulp-htmlmin": "^3.0.0",
-    "gulp-rename": "^1.2.2",
-    "gulp-uglify": "^3.0.0",
-    "pump": "^1.0.2"
-  },
+  "description": "FTSE-100 visualisations",
+  "main": "gulpfile.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -30,5 +15,15 @@
   "bugs": {
     "url": "https://github.com/DoctorTone/FTSEViz/issues"
   },
-  "homepage": "https://github.com/DoctorTone/FTSEViz#readme"
+  "homepage": "https://github.com/DoctorTone/FTSEViz#readme",
+  "devDependencies": {
+    "parcel-bundler": "^1.12.4"
+  },
+  "dependencies": {
+    "bootstrap": "^4.4.1",
+    "jquery": "^3.5.0",
+    "popper.js": "^1.16.1",
+    "three": "^0.115.0",
+    "three-trackballcontrols": "0.0.8"
+  }
 }
