@@ -23,3 +23,5 @@ const NUM_MONTHS = 12;
 let DATES = {
     WEEKS_PER_MONTH: 4
 };
+
+export { MONTHS, NUM_MONTHS, DATES };

@@ -3,8 +3,9 @@
  */
 
 //Implementation for Sprite class
+import * as THREE from "three";
 
-class Label {
+export class Label {
     constructor(name, textLines, labelProperties) {
         //Create label
         this.labelProperties = labelProperties;

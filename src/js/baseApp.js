@@ -3,7 +3,12 @@
  */
 //Common baseline for visualisation app
 
-class BaseApp {
+import * as SCENE from "./sceneConfig";
+import * as THREE from "three";
+//let TrackballControls = require("three-trackballcontrols");
+var TrackballControls = require('three-trackballcontrols');
+
+export class BaseApp {
     constructor() {
         this.renderer = null;
         this.scenes = [];
@@ -168,8 +173,8 @@ class BaseApp {
 
     createCamera() {
         //const CAM_X = -250, CAM_Y = 110, CAM_Z = 280;
-        let camNear = new THREE.Vector3(CAM_POS_NEAR_X, CAM_POS_NEAR_Y, CAM_POS_NEAR_Z);
-        let camFar = new THREE.Vector3(CAM_POS_FAR_X, CAM_POS_FAR_Y, CAM_POS_FAR_Z);
+        let camNear = new THREE.Vector3(SCENE.CAM_POS_NEAR_X, SCENE.CAM_POS_NEAR_Y, SCENE.CAM_POS_NEAR_Z);
+        let camFar = new THREE.Vector3(SCENE.CAM_POS_FAR_X, SCENE.CAM_POS_FAR_Y, SCENE.CAM_POS_FAR_Z);
         const NEAR_PLANE = 0.1, FAR_PLANE = 10000;
         this.camera = new THREE.PerspectiveCamera(45, this.container.clientWidth / window.innerHeight, NEAR_PLANE, FAR_PLANE );
         this.camera.position.copy(camNear);
@@ -190,7 +195,7 @@ class BaseApp {
     }
 
     createControls() {
-        this.controls = new THREE.TrackballControls(this.camera, this.container);
+        this.controls = new TrackballControls(this.camera, this.container);
         this.controls.rotateSpeed = 1.0;
         this.controls.zoomSpeed = 1.0;
         this.controls.panSpeed = 1.0;
@@ -198,17 +203,20 @@ class BaseApp {
         this.controls.staticMoving = true;
         this.controls.dynamicDampingFactor = 0.3;
 
-        this.controls.disableMovement();
+        // Disable controls
+        this.controls.noRotate = true;
+	    this.controls.noZoom = true;
+        this.controls.noPan = true;
 
         this.controls.keys = [ 65, 83, 68 ];
 
         const LOOK_X = -250, LOOK_Y = 15, LOOK_Z = 0;
         let lookAt = new THREE.Vector3(LOOK_X, LOOK_Y, LOOK_Z);
-        this.controls.setLookAt(lookAt);
+        this.controls.target.copy(lookAt);
     }
 
     setCamera(mode) {
-        let camPos = mode === NEAR ? this.camPosNear : this.camPosFar;
+        let camPos = mode === SCENE.NEAR ? this.camPosNear : this.camPosFar;
         this.camera.position.copy(camPos);
     }
 

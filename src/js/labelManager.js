@@ -2,7 +2,11 @@
  * Created by atg on 28/01/2015.
  */
 //Manage all the labels (sprites) for the website
-class LabelManager {
+
+import * as THREE from "three";
+import { Label } from "./Label";
+
+export class LabelManager {
     constructor() {
         this.labelProperties = {
             fontFace: "Arial",

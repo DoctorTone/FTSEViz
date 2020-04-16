@@ -4,6 +4,10 @@
 import $ from "jquery";
 import * as THREE from "three";
 import { BaseApp } from "./baseApp";
+import * as SCENE from "./sceneConfig";
+import { MONTHS, NUM_MONTHS, DATES } from "./dates";
+import { LabelManager } from "./labelManager";
+import data from "../../data/ftse100_2016.json";
 
 let appearanceConfig = {
     Back: '#5c5f64',
@@ -31,22 +35,6 @@ class FTSEApp extends BaseApp {
 
     init(container) {
         super.init(container);
-
-        //Load any preferences
-        let prefs = localStorage.getItem(this.baseName + "Saved");
-        if(prefs) {
-            let value;
-            for(let prop in appearanceConfig) {
-                value = localStorage.getItem(this.baseName + prop);
-                if(value) {
-                    this.setGUI(prop, value);
-                }
-            }
-            let colour = localStorage.getItem(this.baseName + "Back");
-            if(colour) {
-                this.renderer.setClearColor(colour, 1.0);
-            }
-        }
     }
 
     createScene() {
@@ -56,10 +44,10 @@ class FTSEApp extends BaseApp {
         this.fitToScreen();
 
         //Set up main scene
-        this.WALL_RADIUS = WALL_DEPTH;
+        this.WALL_RADIUS = SCENE.WALL_DEPTH;
         this.DIVS_PER_SEGMENT = 6;
-        this.ROT_INC_DAILY = (Math.PI * 2)/NUM_WALLS_DAILY;
-        this.ROT_INC_WEEKLY = (Math.PI * 2)/NUM_WALLS_WEEKLY;
+        this.ROT_INC_DAILY = (Math.PI * 2)/SCENE.NUM_WALLS_DAILY;
+        this.ROT_INC_WEEKLY = (Math.PI * 2)/SCENE.NUM_WALLS_WEEKLY;
         this.DIV_ROT_INC = this.ROT_INC_DAILY/this.DIVS_PER_SEGMENT;
         this.SEG_OFFSET = 2;
         this.SCENE_ROTATE_TIME = 2;
@@ -71,7 +59,7 @@ class FTSEApp extends BaseApp {
         this.rotationTime = 0;
         this.moveTime = 0;
         this.animate = true;
-        this.moveSpeed = MOVE_SPEED;
+        this.moveSpeed = SCENE.MOVE_SPEED;
         this.MOVE_INC = -110;
         this.VIEW_MOVE_INC = 500;
         this.SCENE_MOVE_TIME = 2;
@@ -98,12 +86,12 @@ class FTSEApp extends BaseApp {
 
         //Main spindles
         let parent = new THREE.Object3D();
-        let cylinderGeom = new THREE.CylinderBufferGeometry(CENTRE_RADIUS, CENTRE_RADIUS, CENTRE_HEIGHT, SEGMENTS);
+        let cylinderGeom = new THREE.CylinderBufferGeometry(SCENE.CENTRE_RADIUS, SCENE.CENTRE_RADIUS, SCENE.CENTRE_HEIGHT, SCENE.SEGMENTS);
         this.spindleMat = new THREE.MeshLambertMaterial({color: appearanceConfig.Block});
         this.spindleMatDisabled = new THREE.MeshLambertMaterial({color: 0x909090});
         let spindle = new THREE.Mesh(cylinderGeom, this.spindleMat);
-        spindle.position.y += CENTRE_HEIGHT/2;
-        parent.position.set(WEEKLY_X, WEEKLY_Y, WEEKLY_Z);
+        spindle.position.y += SCENE.CENTRE_HEIGHT/2;
+        parent.position.set(SCENE.WEEKLY_X, SCENE.WEEKLY_Y, SCENE.WEEKLY_Z);
         parent.add(spindle);
         this.parentGroupDaily = parent;
         this.root.add(parent);
@@ -111,17 +99,17 @@ class FTSEApp extends BaseApp {
         //Create structure for weekly data
         let weeklyParent = new THREE.Object3D();
         spindle = new THREE.Mesh(cylinderGeom, this.spindleMat);
-        spindle.position.y += CENTRE_HEIGHT/2;
+        spindle.position.y += SCENE.CENTRE_HEIGHT/2;
         weeklyParent.add(spindle);
-        weeklyParent.position.set(MONTHLY_X, MONTHLY_Y, MONTHLY_Z);
+        weeklyParent.position.set(SCENE.MONTHLY_X, SCENE.MONTHLY_Y, SCENE.MONTHLY_Z);
         this.parentGroupWeekly = weeklyParent;
         this.parentGroupWeekly.rotation.y = -(this.ROT_INC_DAILY * 2);
         this.facingSegment = 2;
         this.root.add(weeklyParent);
 
         //Walls
-        let wallMat = new THREE.MeshLambertMaterial({color: 0xffffff, transparent: true, opacity: WALL_OPACITY});
-        let wallGeom = new THREE.BoxBufferGeometry(WALL_WIDTH, WALL_HEIGHT, WALL_DEPTH, SEGMENTS, SEGMENTS);
+        let wallMat = new THREE.MeshLambertMaterial({color: 0xffffff, transparent: true, opacity: SCENE.WALL_OPACITY});
+        let wallGeom = new THREE.BoxBufferGeometry(SCENE.WALL_WIDTH, SCENE.WALL_HEIGHT, SCENE.WALL_DEPTH, SCENE.SEGMENTS, SCENE.SEGMENTS);
         let spindleInfo = {
             geom: wallGeom,
             mat: wallMat,
@@ -136,7 +124,7 @@ class FTSEApp extends BaseApp {
         this.addSpindle(spindleInfo);
 
         //Data columns
-        cylinderGeom = new THREE.CylinderBufferGeometry(COLUMN_RADIUS, COLUMN_RADIUS, COLUMN_HEIGHT, SEGMENTS, SEGMENTS);
+        cylinderGeom = new THREE.CylinderBufferGeometry(SCENE.COLUMN_RADIUS, SCENE.COLUMN_RADIUS, SCENE.COLUMN_HEIGHT, SCENE.SEGMENTS, SCENE.SEGMENTS);
 
         let blockInfo = {
             geom: cylinderGeom,
@@ -166,26 +154,23 @@ class FTSEApp extends BaseApp {
         this.addToScene(label.getSprite());
         this.currentLabel = label;
 
-        //Load in data
-        let dataLoad = new dataLoader();
-        dataLoad.load("data/ftse100_2016.json", data => {
-            this.data = data;
-            this.preProcessData();
-            this.updateSceneDaily();
-            this.setSceneWeekly();
-            this.addPriceDailyLabels();
-            this.addPriceWeeklyLabels();
-            this.addDateLabels();
-            this.addWeekLabels();
-        });
+        //Process data
+        this.data = data;
+        this.preProcessData();
+        this.updateSceneDaily();
+        this.setSceneWeekly();
+        this.addPriceDailyLabels();
+        this.addPriceWeeklyLabels();
+        this.addDateLabels();
+        this.addWeekLabels();
     }
 
     fitToScreen() {
         //If in portrait mode then move camera
         if(window.innerHeight > window.innerWidth) {
-            this.setCamera(FAR);
+            this.setCamera(SCENE.FAR);
         } else {
-            this.setCamera(NEAR);
+            this.setCamera(SCENE.NEAR);
         }
     }
 
@@ -196,7 +181,7 @@ class FTSEApp extends BaseApp {
             wall = new THREE.Mesh(spindleInfo.geom, spindleInfo.mat);
             wallGroup = new THREE.Object3D();
             wallGroup.rotation.y = (rotation*(i + 1)) + rotation/2;
-            wall.position.set(0, WALL_HEIGHT/2, WALL_DEPTH/2);
+            wall.position.set(0, SCENE.WALL_HEIGHT/2, SCENE.WALL_DEPTH/2);
             wallGroup.add(wall);
             spindleInfo.parent.add(wallGroup);
         }
@@ -204,11 +189,11 @@ class FTSEApp extends BaseApp {
 
     addBlocks(blockInfo, columns) {
         let i, blockNum = 0, segment, column;
-        for(segment=0; segment<NUM_SEGMENTS; ++segment) {
-            for(i=0; i<NUM_COLUMNS_PER_SEGMENT; ++i) {
+        for(segment=0; segment<SCENE.NUM_SEGMENTS; ++segment) {
+            for(i=0; i<SCENE.NUM_COLUMNS_PER_SEGMENT; ++i) {
                 column = new THREE.Mesh(blockInfo.geom, blockInfo.mat);
                 column.position.copy(this.getBlockPosition(segment, i, this.WALL_RADIUS));
-                column.position.y += COLUMN_HEIGHT/2;
+                column.position.y += SCENE.COLUMN_HEIGHT/2;
                 column.name = blockInfo.name + blockNum;
                 ++blockNum;
                 blockInfo.parent.add(column);
@@ -223,8 +208,8 @@ class FTSEApp extends BaseApp {
         let label, labelNumber = 0, labelOffsetY = 5;
         let data = this.data[this.currentMonthDaily].shares;
 
-        for(let segment=0; segment<NUM_SEGMENTS; ++segment) {
-            for(let i=0; i<NUM_COLUMNS_PER_SEGMENT; ++i) {
+        for(let segment=0; segment<SCENE.NUM_SEGMENTS; ++segment) {
+            for(let i=0; i<SCENE.NUM_COLUMNS_PER_SEGMENT; ++i) {
                 labelProperty = {};
                 labelProperty.position = new THREE.Vector3();
                 labelProperty.position.copy(this.getBlockPosition(segment, i, this.WALL_RADIUS * 1.075));
@@ -246,7 +231,7 @@ class FTSEApp extends BaseApp {
     }
 
     clearDateLabels() {
-        let totalLabels = NUM_SEGMENTS * NUM_COLUMNS_PER_SEGMENT;
+        let totalLabels = SCENE.NUM_SEGMENTS * SCENE.NUM_COLUMNS_PER_SEGMENT;
         let label, labelName = "dateLabel";
         for(let i=0; i<totalLabels; ++i) {
             label = this.labelManager.getLabel(labelName + i);
@@ -262,8 +247,8 @@ class FTSEApp extends BaseApp {
         let label, labelNumber = 0, labelOffsetY = 7, price;
         let data = this.data[this.currentMonthDaily].shares;
 
-        for(let segment=0; segment<NUM_SEGMENTS; ++segment) {
-            for(let i=0; i<NUM_COLUMNS_PER_SEGMENT; ++i) {
+        for(let segment=0; segment<SCENE.NUM_SEGMENTS; ++segment) {
+            for(let i=0; i<SCENE.NUM_COLUMNS_PER_SEGMENT; ++i) {
                 labelProperty = {};
                 labelProperty.position = new THREE.Vector3();
                 labelProperty.position.copy(this.getBlockPosition(segment, i, this.WALL_RADIUS));
@@ -291,8 +276,8 @@ class FTSEApp extends BaseApp {
         let label, labelNumber = 0, labelOffsetY = 7, price;
         let data = this.data[this.currentMonthWeekly].sharesWeekly;
 
-        for(let segment=0; segment<NUM_SEGMENTS; ++segment) {
-            for(let i=0; i<NUM_COLUMNS_PER_SEGMENT; ++i) {
+        for(let segment=0; segment<SCENE.NUM_SEGMENTS; ++segment) {
+            for(let i=0; i<SCENE.NUM_COLUMNS_PER_SEGMENT; ++i) {
                 labelProperty = {};
                 labelProperty.position = new THREE.Vector3();
                 labelProperty.position.copy(this.getBlockPosition(segment, i, this.WALL_RADIUS));
@@ -319,8 +304,8 @@ class FTSEApp extends BaseApp {
         let scale = new THREE.Vector3(20, 10, 1);
         let label, labelNumber = 0, labelOffsetY = 5, week;
 
-        for(let segment=0; segment<NUM_SEGMENTS; ++segment) {
-            for(let i=0; i<NUM_COLUMNS_PER_SEGMENT; ++i) {
+        for(let segment=0; segment<SCENE.NUM_SEGMENTS; ++segment) {
+            for(let i=0; i<SCENE.NUM_COLUMNS_PER_SEGMENT; ++i) {
                 labelProperty = {};
                 labelProperty.position = new THREE.Vector3();
                 labelProperty.position.copy(this.getBlockPosition(segment, i, this.WALL_RADIUS * 1.075));
@@ -342,11 +327,11 @@ class FTSEApp extends BaseApp {
         let label, baseName = "dateLabel", labelNumber = 0, dayNumber = 0;
         let month = this.currentMonthDaily;
         let data = this.data[month].shares;
-        let start = this.data[month].startSlot, end = this.data[month].endSlot + (4 *NUM_COLUMNS_PER_SEGMENT);
+        let start = this.data[month].startSlot, end = this.data[month].endSlot + (4 * SCENE.NUM_COLUMNS_PER_SEGMENT);
         let text;
 
-        for(let segment=0; segment<NUM_SEGMENTS; ++segment) {
-            for (let i = 0; i < NUM_COLUMNS_PER_SEGMENT; ++i) {
+        for(let segment=0; segment<SCENE.NUM_SEGMENTS; ++segment) {
+            for (let i = 0; i < SCENE.NUM_COLUMNS_PER_SEGMENT; ++i) {
                 label = this.labelManager.getLabel(baseName + labelNumber);
                 if(label) {
                     text = labelNumber > end ? "" : labelNumber < start ? "" : data[dayNumber++][0];
@@ -462,7 +447,7 @@ class FTSEApp extends BaseApp {
 
         let dateName = "dateLabel", weekLabel = "weeklyLabel";
         let label;
-        let totalLabels = NUM_SEGMENTS * NUM_COLUMNS_PER_SEGMENT;
+        let totalLabels = SCENE.NUM_SEGMENTS * SCENE.NUM_COLUMNS_PER_SEGMENT;
         for(let i=0; i<totalLabels; ++i) {
             label = this.labelManager.getLabel(dateName + i);
             if(label) {
@@ -484,7 +469,7 @@ class FTSEApp extends BaseApp {
     showPriceLabels(visible) {
         let labelName = this.weeklyView ? "priceWeeklyLabel" : "priceDailyLabel";
         let label, text;
-        let totalLabels = NUM_SEGMENTS * NUM_COLUMNS_PER_SEGMENT;
+        let totalLabels = SCENE.NUM_SEGMENTS * SCENE.NUM_COLUMNS_PER_SEGMENT;
         for(let i=0; i<totalLabels; ++i) {
             label = this.labelManager.getLabel(labelName + i);
             if(label) {
@@ -521,8 +506,8 @@ class FTSEApp extends BaseApp {
             numShares = this.data[month].shares.length;
             for (let share = 0; share < numShares; ++share) {
                 currentPrice = this.data[month].shares[share];
-                dailyPrices.push(currentPrice[CLOSE_PRICE]);
-                realDailyPrices.push(currentPrice[CLOSE_PRICE]);
+                dailyPrices.push(currentPrice[SCENE.CLOSE_PRICE]);
+                realDailyPrices.push(currentPrice[SCENE.CLOSE_PRICE]);
             }
             dailyPricesPerMonth.push(dailyPrices);
             realDailyPricesPerMonth.push(realDailyPrices);
@@ -629,7 +614,7 @@ class FTSEApp extends BaseApp {
         }
         let weeklyPrices = this.weeklyPricesPerMonth[month];
         let slot = 0;
-        for(let i=0; i<DISPLAY_MONTHS; ++i) {
+        for(let i=0; i<SCENE.DISPLAY_MONTHS; ++i) {
             for(let j=0, numSlots=weeklyPrices.length; j<numSlots; ++j) {
                 this.setShareWeeklyPrice(slot++, weeklyPrices[j]);
             }
@@ -652,11 +637,11 @@ class FTSEApp extends BaseApp {
         let data = this.weeklyPricesPerMonth[month];
 
         let segment = this.facingSegment + increment;
-        if(segment >= NUM_SEGMENTS) {
-            segment -= NUM_SEGMENTS;
+        if(segment >= SCENE.NUM_SEGMENTS) {
+            segment -= SCENE.NUM_SEGMENTS;
         }
         if(segment < 0) {
-            segment += NUM_SEGMENTS;
+            segment += SCENE.NUM_SEGMENTS;
         }
 
         this.setShareWeeklyPriceSegment(segment, data);
@@ -704,7 +689,7 @@ class FTSEApp extends BaseApp {
     }
 
     setShareWeeklyPriceSegment(segment, data) {
-        let block = segment * NUM_COLUMNS_PER_SEGMENT;
+        let block = segment * SCENE.NUM_COLUMNS_PER_SEGMENT;
         for(let i=0; i<data.length; ++i) {
             this.setShareWeeklyPrice(block + i, data[i]);
         }
@@ -722,7 +707,7 @@ class FTSEApp extends BaseApp {
                 return "No Data";
             }
         } else {
-            block = block % NUM_COLUMNS_PER_SEGMENT;
+            block = block % SCENE.NUM_COLUMNS_PER_SEGMENT;
         }
         return prices[block];
     }
@@ -777,7 +762,7 @@ class FTSEApp extends BaseApp {
                 } else {
                     this.sceneMoving = false;
                     this.MOVE_INC *= -1;
-                    this.moveSpeed = MOVE_SPEED;
+                    this.moveSpeed = SCENE.MOVE_SPEED;
                     this.showPriceLabels(this.showPrices);
                 }
             }
@@ -790,7 +775,7 @@ class FTSEApp extends BaseApp {
                 this.root.position.x = this.sceneMoveEnd;
                 this.moveTime = 0;
                 this.viewMoving = false;
-                this.moveSpeed = MOVE_SPEED;
+                this.moveSpeed = SCENE.MOVE_SPEED;
                 this.changeViews();
             }
         }
@@ -840,7 +825,7 @@ class FTSEApp extends BaseApp {
 
         if(this.weeklyView) {
             if(--this.facingSegment < 0) {
-                this.facingSegment = NUM_SEGMENTS - 1;
+                this.facingSegment = SCENE.NUM_SEGMENTS - 1;
             }
         }
 
@@ -859,7 +844,7 @@ class FTSEApp extends BaseApp {
         this.sceneRotating = true;
 
         if(this.weeklyView) {
-            if(++this.facingSegment >= NUM_SEGMENTS) {
+            if(++this.facingSegment >= SCENE.NUM_SEGMENTS) {
                 this.facingSegment = 0;
             }
         }
@@ -965,19 +950,14 @@ class FTSEApp extends BaseApp {
 }
 
 $(document).ready( () => {
-    if(!Detector.webgl) {
-        $('#notSupported').show();
-        return;
-    }
-
-    if(window.innerWidth < MOBILE_WIDTH) {
+    if(window.innerWidth < SCENE.MOBILE_WIDTH) {
         $('#mainModal').modal();
     }
 
     let container = document.getElementById("WebGL-output");
     let app = new FTSEApp();
     app.init(container);
-    app.createGUI();
+    //app.createGUI();
     app.createScene();
 
     $('#nextMonth').on("click", () => {
