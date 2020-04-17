@@ -928,7 +928,7 @@ class FTSEApp extends BaseApp {
 
     openSideMenu() {
         document.getElementById("sideMenu").style.width = "250px";
-        document.getElementById("WebGL-Output").style.marginLeft = "250px";
+        //document.getElementById("WebGL-Output").style.marginLeft = "250px";
         document.getElementById("infoTab").style.display = "none";
     }
 
@@ -954,7 +954,7 @@ $(document).ready( () => {
 
     // Elements
     const infoTab = $("#infoTab");
-    
+
     $('#nextMonth').on("click", () => {
         app.nextMonth();
     });
