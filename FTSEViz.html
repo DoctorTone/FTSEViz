@@ -64,9 +64,25 @@
         <span>Info</span>
     </div>
 
+    <div id="controlTab" class="panel bg-secondary py-2">
+        <span>Controls</span>
+        <img src="./images/leftWhite.png" alt="Control Tab" class="w-50">
+    </div>
+
     <!-- Off canvas menu -->
-    <div id="sideMenu" class="sideNav panel">
-        <a href="#" id="closeButton" class="closebtn">&times;</a>
+    <div id="sideMenuInfo" class="sideNavLeft panel">
+        <a href="#" id="closeButtonInfo" class="closebtn">&times;</a>
+        <div class="pl-5 py-3 mb-5">
+            <h4 class="mb-5">Sleep Data</h4>
+            <p>Sleep: <span id="sleepSide">7h 3mins</span></p>
+            <p>Quality: <span id="qualitySide">7h 3 mins</span></p>
+            <p>Awake: <span id="awakeSide">7h 3mins</span></p>
+            <p>Deep: <span id="deepSide">7h 3 mins</span></p>
+        </div>
+    </div>
+
+    <div id="sideMenuControl" class="sideNavRight panel">
+        <a href="#" id="closeControlTab" class="closebtn">&times;</a>
         <div class="pl-5 py-3 mb-5">
             <h4 class="mb-5">Sleep Data</h4>
             <p>Sleep: <span id="sleepSide">7h 3mins</span></p>

@@ -927,13 +927,13 @@ class FTSEApp extends BaseApp {
     }
 
     openSideMenu() {
-        document.getElementById("sideMenu").style.width = "250px";
+        document.getElementById("sideMenuInfo").style.width = "250px";
         //document.getElementById("WebGL-Output").style.marginLeft = "250px";
         document.getElementById("infoTab").style.display = "none";
     }
 
     closeSideMenu() {
-        document.getElementById("sideMenu").style.width = "0px";
+        document.getElementById("sideMenuInfo").style.width = "0px";
         //document.getElementById("WebGL-Output").style.marginLeft = "0px";
         document.getElementById("infoTab").style.display = "block";
     }
@@ -960,7 +960,7 @@ $(document).ready( () => {
 
     // Elements
     const infoTab = $("#infoTab");
-    const closeButton = $("#closeButton");
+    const closeButtonInfo = $("#closeButtonInfo");
 
     $('#nextMonth').on("click", () => {
         app.nextMonth();
@@ -1020,7 +1020,7 @@ $(document).ready( () => {
         app.openSideMenu();
     });
 
-    closeButton.on("click", () => {
+    closeButtonInfo.on("click", () => {
         app.closeSideMenu();
     });
 

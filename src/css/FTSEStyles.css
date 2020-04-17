@@ -27,7 +27,13 @@ body {
     width: 5%;
     cursor: pointer;
 }
-.sideNav {
+#controlTab {
+    top: 25%;
+    right: 0;
+    width: 5%;
+    cursor: pointer;
+}
+.sideNavLeft {
     height: 50%;
     width: 0;
     position: fixed;
@@ -39,7 +45,19 @@ body {
     transition: 0.5s;
     padding-top: 60px;
 }
-.sideNav .closebtn {
+.sideNavRight {
+    height: 50%;
+    width: 0;
+    position: fixed;
+    z-index: 1;
+    top: 25%;
+    right: 0;
+    background-color: #111;
+    overflow-x: hidden;
+    transition: 0.5s;
+    padding-top: 60px;
+}
+.sideNavLeft .closebtn {
     position: absolute;
     top: 0;
     right: 25px;
