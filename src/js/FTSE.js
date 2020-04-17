@@ -932,6 +932,12 @@ class FTSEApp extends BaseApp {
         document.getElementById("infoTab").style.display = "none";
     }
 
+    closeSideMenu() {
+        document.getElementById("sideMenu").style.width = "0px";
+        //document.getElementById("WebGL-Output").style.marginLeft = "0px";
+        document.getElementById("infoTab").style.display = "block";
+    }
+
     stopNotifications(elemList) {
         for(let i=0, numElems=elemList.length; i<numElems; ++i) {
             $('#' + elemList[i]).contextmenu(() => {
@@ -954,6 +960,7 @@ $(document).ready( () => {
 
     // Elements
     const infoTab = $("#infoTab");
+    const closeButton = $("#closeButton");
 
     $('#nextMonth').on("click", () => {
         app.nextMonth();
@@ -1011,6 +1018,10 @@ $(document).ready( () => {
 
     infoTab.on("click", () => {
         app.openSideMenu();
+    });
+
+    closeButton.on("click", () => {
+        app.closeSideMenu();
     });
 
     $('#info').on("click", () => {
