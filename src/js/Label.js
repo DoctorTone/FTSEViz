@@ -39,6 +39,9 @@ export class Label {
         let height = canvas.height;
         let radius = labelProperties.radius;
         let backgroundColour = labelProperties.backgroundColour;
+        //context.fillStyle = "rgba(255, 0, 0, 0)";
+        //context.fillRect(0, 0, width, height);
+
         if(labelProperties.rect) {
             this.roundRect(context, 0, 0, width, height, radius, borderThickness, backgroundColour);
         }
@@ -52,14 +55,14 @@ export class Label {
         }
 
         // canvas contents will be used for a texture
-        let texture = new THREE.Texture(canvas);
+        let texture = new THREE.CanvasTexture(canvas);
         this.texture = texture;
         texture.minFilter = THREE.LinearFilter;
         texture.needsUpdate = true;
 
         //texture.needsUpdate = true;
         let spriteMaterial = new THREE.SpriteMaterial({
-            transparent: false,
+            transparent: true,
             opacity: labelProperties.opacity,
             map: texture}
         );
