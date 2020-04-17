@@ -9,16 +9,10 @@ import { MONTHS, NUM_MONTHS, DATES } from "./dates";
 import { LabelManager } from "./labelManager";
 import data from "../../data/ftse100_2016.json";
 
-let appearanceConfig = {
+const appearanceConfig = {
     Back: '#5c5f64',
     Ground: '#0c245c',
     Block: '#fffb37'
-};
-
-let saveConfig = {
-    Back: appearanceConfig.Back,
-    Ground: appearanceConfig.Ground,
-    Block: appearanceConfig.Block
 };
 
 class FTSEApp extends BaseApp {
@@ -1014,7 +1008,7 @@ $(document).ready( () => {
         app.zoomIn(false);
     });
 
-    $('#instructions').on("click", () => {
+    $('#info').on("click", () => {
         $('#myModal').modal();
     });
 
