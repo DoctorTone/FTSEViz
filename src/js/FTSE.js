@@ -926,12 +926,10 @@ class FTSEApp extends BaseApp {
         this.zoomingIn = zoom;
     }
 
-    displayMessage(msg) {
-        $('#content').html(msg);
-        $('#message').show();
-        setTimeout( () => {
-            $('#message').hide();
-        }, this.messageTimer);
+    openSideMenu() {
+        document.getElementById("sideMenu").style.width = "250px";
+        document.getElementById("WebGL-Output").style.marginLeft = "250px";
+        document.getElementById("infoTab").style.display = "none";
     }
 
     stopNotifications(elemList) {
@@ -954,6 +952,9 @@ $(document).ready( () => {
     //app.createGUI();
     app.createScene();
 
+    // Elements
+    const infoTab = $("#infoTab");
+    
     $('#nextMonth').on("click", () => {
         app.nextMonth();
     });
@@ -1006,6 +1007,10 @@ $(document).ready( () => {
 
     zoomInElement.on("touchend", () => {
         app.zoomIn(false);
+    });
+
+    infoTab.on("click", () => {
+        app.openSideMenu();
     });
 
     $('#info').on("click", () => {
