@@ -3,10 +3,21 @@
 body {
     margin: 0;
     overflow: hidden;
+    color: white;
 }
 .panel {
     position: absolute;
 }
 #title {
     top: 1%;
+}
+#info {
+    bottom: 1%;
+    left: 1%;
+    width: 4%;
+}
+#copyright {
+    bottom: 1%;
+    right: 1%;
+    width: 15%;
 }
