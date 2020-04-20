@@ -65,6 +65,7 @@ class FTSEApp extends BaseApp {
         this.NUM_SEGMENTS = 5;
         this.NUM_BLOCKS = this.NUM_SEGMENTS * this.BLOCKS_PER_SEGMENT;
         this.currentLabel = undefined;
+        this.currentViewGroup;
 
         this.currentMonthDaily = MONTHS.JANUARY;
         this.currentMonthWeekly = MONTHS.JANUARY;
@@ -153,6 +154,7 @@ class FTSEApp extends BaseApp {
         this.addToScene(label.getSprite());
         this.currentLabel = label;
 
+        this.currentViewGroup = this.parentGroupDaily;
         //Process data
         this.data = data;
         this.preProcessData();
@@ -781,14 +783,17 @@ class FTSEApp extends BaseApp {
 
         if(this.viewRotating) {
             if(!this.animate) this.rotationTime = this.SCENE_ROTATE_TIME;
-            this.parentGroupWeekly.visible = true;
+            this.parentGroupWeekly.visible = this.parentGroupDaily.visible = true;
             this.rotationTime += delta;
             this.root.rotation.x += (this.rotViewSpeed * delta);
             if(this.rotationTime >= this.VIEW_ROTATE_TIME) {
                 this.root.rotation.x = this.sceneRotViewEnd;
                 this.rotationTime = 0;
                 this.viewRotating = false;
-                this.parentGroupDaily.visible = false;
+                this.weeklyView = !this.weeklyView;
+                this.parentGroupWeekly.visible = this.weeklyView;
+                this.parentGroupDaily.visible = !this.weeklyView;
+                $("#viewMode").html(this.weeklyView ? "Weekly" : "Daily");
             }
         }
 
@@ -902,10 +907,9 @@ class FTSEApp extends BaseApp {
     toggleView() {
         if(this.sceneRotating || this.viewRotating) return;
 
-        this.rotateGroup = this.weeklyView ? this.parentGroupWeekly : this.parentGroupDaily;
+        this.currentViewGroup = this.weeklyView ? this.parentGroupWeekly : this.parentGroupDaily;
         this.rotSpeed = -this.ROT_INC_DAILY / this.SCENE_ROTATE_TIME;
         this.viewRotating = true;
-        this.weeklyView = !this.weeklyView;
     }
 
     changeViews() {
