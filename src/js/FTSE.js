@@ -12,7 +12,7 @@ import data from "../../data/ftse100_2016.json";
 const appearanceConfig = {
     Back: '#5c5f64',
     Ground: '#0x999999',
-    Block: '#fffb37'
+    Block: '#ed53cc'
 };
 
 class FTSEApp extends BaseApp {
@@ -99,10 +99,10 @@ class FTSEApp extends BaseApp {
         this.parentGroupWeekly = weeklyParent;
         this.parentGroupWeekly.rotation.y = -(this.ROT_INC_DAILY * 2);
         this.facingSegment = 2;
-        this.root.add(weeklyParent);
+        //this.root.add(weeklyParent);
 
         //Walls
-        let wallMat = new THREE.MeshLambertMaterial({color: 0xffffff, transparent: true, opacity: SCENE.WALL_OPACITY});
+        let wallMat = new THREE.MeshLambertMaterial({color: SCENE.WALL_COLOUR, transparent: true, opacity: SCENE.WALL_OPACITY});
         let wallGeom = new THREE.BoxBufferGeometry(SCENE.WALL_WIDTH, SCENE.WALL_HEIGHT, SCENE.WALL_DEPTH, SCENE.SEGMENTS, SCENE.SEGMENTS);
         let spindleInfo = {
             geom: wallGeom,
