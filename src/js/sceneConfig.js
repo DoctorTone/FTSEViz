@@ -3,6 +3,7 @@
  */
 //All settings related to the scene
 
+export const BACKGROUND = 0xa0a0a0;
 export const CENTRE_HEIGHT = 105;
 export const CENTRE_RADIUS = 5;
 export const SEGMENTS = 16;

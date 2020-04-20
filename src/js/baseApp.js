@@ -49,7 +49,7 @@ export class BaseApp {
 
     createRenderer() {
         this.renderer = new THREE.WebGLRenderer( {antialias : true, alpha: true});
-        this.renderer.setClearColor(0x5c5f64, 1.0);
+        //this.renderer.setClearColor(0x5c5f64, 1.0);
         this.renderer.shadowMapEnabled = true;
         let isMSIE = /*@cc_on!@*/0;
 
@@ -136,6 +136,7 @@ export class BaseApp {
 
     createScene() {
         let scene = new THREE.Scene();
+        scene.background = new THREE.Color(SCENE.BACKGROUND);
         this.scenes.push(scene);
 
         let ambientLight = new THREE.AmbientLight(0x383838);
