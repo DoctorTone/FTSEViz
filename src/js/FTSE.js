@@ -488,6 +488,12 @@ class FTSEApp extends BaseApp {
         ground.name = "Ground";
         ground.rotation.x = -Math.PI/2;
         this.root.add(ground);
+
+        // Grid
+        let grid = new THREE.GridHelper( 2000, 40, 0x000000, 0x000000 );
+		grid.material.opacity = 0.2;
+        grid.material.transparent = true;
+        this.root.add(grid);
     }
 
     preProcessData() {
