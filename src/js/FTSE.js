@@ -11,7 +11,7 @@ import data from "../../data/ftse100_2016.json";
 
 const appearanceConfig = {
     Back: '#5c5f64',
-    Ground: '#0x999999',
+    Ground: '0x999999',
     Block: '#fcba03'
 };
 
@@ -69,7 +69,7 @@ class FTSEApp extends BaseApp {
         this.currentWeek = 0;
 
         this.weeklyView = false;
-        this.viewMoving = false;
+        this.viewRotating = false;
 
         //Root group
         this.root = new THREE.Object3D();
@@ -774,13 +774,13 @@ class FTSEApp extends BaseApp {
             }
         }
 
-        if(this.viewMoving) {
+        if(this.viewRotating) {
             this.moveTime += delta;
             this.root.position.x += (this.moveSpeed * delta);
             if(this.moveTime >= this.SCENE_MOVE_TIME) {
                 this.root.position.x = this.sceneMoveEnd;
                 this.moveTime = 0;
-                this.viewMoving = false;
+                this.viewRotating = false;
                 this.moveSpeed = SCENE.MOVE_SPEED;
                 this.changeViews();
             }
@@ -821,7 +821,7 @@ class FTSEApp extends BaseApp {
 
     previousSegment() {
         //Move to previous segment
-        if(this.sceneRotating || this.sceneMoving || this.viewMoving) return;
+        if(this.sceneRotating || this.sceneMoving || this.viewRotating) return;
 
         this.rotateGroup = this.weeklyView ? this.parentGroupWeekly : this.parentGroupDaily;
         this.rotSpeed = this.ROT_INC_DAILY / this.SCENE_ROTATE_TIME;
@@ -838,7 +838,7 @@ class FTSEApp extends BaseApp {
 
     nextSegment() {
         //Move to next segment
-        if(this.sceneRotating || this.sceneMoving || this.viewMoving) return;
+        if(this.sceneRotating || this.sceneMoving || this.viewRotating) return;
 
         this.rotSpeed = -this.ROT_INC_DAILY / this.SCENE_ROTATE_TIME;
         this.rotateGroup = this.weeklyView ? this.parentGroupWeekly : this.parentGroupDaily;
@@ -855,7 +855,7 @@ class FTSEApp extends BaseApp {
 
     nextMonth() {
         //Animate to show next month
-        if(this.sceneRotating || this.sceneMoving || this.viewMoving) return;
+        if(this.sceneRotating || this.sceneMoving || this.viewRotating) return;
 
         if(this.weeklyView) {
             ++this.currentMonthWeekly;
@@ -876,7 +876,7 @@ class FTSEApp extends BaseApp {
 
     previousMonth() {
         //Animate to show next month
-        if(this.sceneRotating || this.sceneMoving || this.viewMoving) return;
+        if(this.sceneRotating || this.sceneMoving || this.viewRotating) return;
 
         if(this.weeklyView) {
             --this.currentMonthWeekly;
@@ -894,9 +894,9 @@ class FTSEApp extends BaseApp {
     }
 
     toggleView() {
-        if(this.sceneRotating || this.sceneMoving || this.viewMoving) return;
+        if(this.sceneRotating || this.viewRotating) return;
 
-        this.viewMoving = true;
+        this.viewRotating = true;
         this.weeklyView = !this.weeklyView;
         this.moveToView();
     }
@@ -971,6 +971,7 @@ $(document).ready( () => {
     const previousWeek = $("#previousWeek");
     const nextMonth = $("#nextMonth");
     const previousMonth = $("#previousMonth");
+    const toggleDisplay = $("#toggleDisplay");
 
     nextMonth.on("click", () => {
         app.nextMonth();
@@ -988,7 +989,8 @@ $(document).ready( () => {
         app.nextSegment();
     });
 
-    $('#toggleView').on("click", () => {
+    toggleDisplay.on("click", () => {
+        console.log("Changed view");
         app.toggleView();
     });
 
