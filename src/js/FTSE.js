@@ -967,6 +967,8 @@ $(document).ready( () => {
     // Elements
     const infoTab = $("#infoTab");
     const closeButtonInfo = $("#closeButtonInfo");
+    const nextWeek = $("#nextWeek");
+    const previousWeek = $("#previousWeek");
 
     $('#nextMonth').on("click", () => {
         app.nextMonth();
@@ -976,11 +978,11 @@ $(document).ready( () => {
         app.previousMonth();
     });
 
-    $('#previousWeek').on("click", () => {
+    previousWeek.on("click", () => {
         app.previousSegment();
     });
 
-    $('#nextWeek').on("click", () => {
+    nextWeek.on("click", () => {
         app.nextSegment();
     });
 
