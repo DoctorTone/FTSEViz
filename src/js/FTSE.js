@@ -481,9 +481,9 @@ class FTSEApp extends BaseApp {
 
     addGround() {
         //Ground plane
-        const GROUND_WIDTH = 1000, GROUND_HEIGHT = 640, SEGMENTS = 16;
-        let groundGeom = new THREE.PlaneBufferGeometry(GROUND_WIDTH, GROUND_HEIGHT, SEGMENTS, SEGMENTS);
-        let groundMat = new THREE.MeshLambertMaterial( {color: appearanceConfig.Ground} );
+        const GROUND_WIDTH = 2000, GROUND_HEIGHT = 2000, SEGMENTS = 16;
+        let groundGeom = new THREE.PlaneBufferGeometry(GROUND_WIDTH, GROUND_HEIGHT);
+        let groundMat = new THREE.MeshLambertMaterial( {color: appearanceConfig.Ground, depthWrite: false} );
         let ground = new THREE.Mesh(groundGeom, groundMat);
         ground.name = "Ground";
         ground.rotation.x = -Math.PI/2;
