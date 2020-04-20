@@ -211,7 +211,7 @@ class FTSEApp extends BaseApp {
                 labelProperty.scale = scale;
                 labelProperty.multiLine = false;
                 labelProperty.visibility = true;
-                labelProperty.textColour = "rgba(255, 165, 0, 1.0)";
+                labelProperty.textColour = "rgba(75, 75, 75, 1.0)";
                 if(data[labelNumber] === undefined) {
                     text = "";
                 } else {
