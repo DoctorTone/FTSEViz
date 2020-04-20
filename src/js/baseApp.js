@@ -213,7 +213,7 @@ export class BaseApp {
 
         this.controls.keys = [ 65, 83, 68 ];
 
-        const LOOK_X = -250, LOOK_Y = 15, LOOK_Z = 0;
+        const LOOK_X = 0, LOOK_Y = 15, LOOK_Z = 0;
         let lookAt = new THREE.Vector3(LOOK_X, LOOK_Y, LOOK_Z);
         this.controls.target.copy(lookAt);
     }

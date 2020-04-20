@@ -490,7 +490,7 @@ class FTSEApp extends BaseApp {
         this.root.add(ground);
 
         // Grid
-        let grid = new THREE.GridHelper( 2000, 40, 0x000000, 0x000000 );
+        let grid = new THREE.GridHelper( 2000, 50, 0x000000, 0x000000 );
 		grid.material.opacity = 0.2;
         grid.material.transparent = true;
         this.root.add(grid);
