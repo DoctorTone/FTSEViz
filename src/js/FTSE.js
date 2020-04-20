@@ -312,7 +312,7 @@ class FTSEApp extends BaseApp {
                 labelProperty.scale = scale;
                 labelProperty.multiLine = false;
                 labelProperty.visibility = true;
-                labelProperty.textColour = "rgba(255, 165, 0, 1.0)";
+                labelProperty.textColour = "rgba(75, 75, 75, 1.0)";
                 week = i + 1;
                 label = this.labelManager.create("weeklyLabel" + labelNumber, "Week" + week, labelProperty);
                 this.parentGroupWeekly.add(label.getSprite());
@@ -781,12 +781,14 @@ class FTSEApp extends BaseApp {
 
         if(this.viewRotating) {
             if(!this.animate) this.rotationTime = this.SCENE_ROTATE_TIME;
+            this.parentGroupWeekly.visible = true;
             this.rotationTime += delta;
-            this.rotateGroup.rotation.x += (this.rotViewSpeed * delta);
+            this.root.rotation.x += (this.rotViewSpeed * delta);
             if(this.rotationTime >= this.VIEW_ROTATE_TIME) {
-                this.rotateGroup.rotation.x = this.sceneRotViewEnd;
+                this.root.rotation.x = this.sceneRotViewEnd;
                 this.rotationTime = 0;
                 this.viewRotating = false;
+                this.parentGroupDaily.visible = false;
             }
         }
 
