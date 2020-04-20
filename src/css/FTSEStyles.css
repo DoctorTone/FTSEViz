@@ -35,7 +35,8 @@ body {
 }
 #toggleControls {
     top: 40%;
-    right: 5%;
+    right: 1%;
+    width: 7.5%;
 }
 .sideNavLeft {
     height: 50%;
