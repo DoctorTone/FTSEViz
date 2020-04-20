@@ -11,7 +11,7 @@ import data from "../../data/ftse100_2016.json";
 
 const appearanceConfig = {
     Back: '#5c5f64',
-    Ground: '#0c245c',
+    Ground: '#0x999999',
     Block: '#fffb37'
 };
 

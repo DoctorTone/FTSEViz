@@ -136,8 +136,10 @@ export class BaseApp {
 
     createScene() {
         let scene = new THREE.Scene();
-        scene.background = new THREE.Color(SCENE.BACKGROUND);
         this.scenes.push(scene);
+
+        scene.background = new THREE.Color(SCENE.BACKGROUND);
+        scene.fog = new THREE.Fog( 0xa0a0a0, 100, 1000 );
 
         let ambientLight = new THREE.AmbientLight(0x383838);
         scene.add(ambientLight);
