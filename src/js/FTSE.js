@@ -775,14 +775,13 @@ class FTSEApp extends BaseApp {
         }
 
         if(this.viewRotating) {
-            this.moveTime += delta;
-            this.root.position.x += (this.moveSpeed * delta);
-            if(this.moveTime >= this.SCENE_MOVE_TIME) {
-                this.root.position.x = this.sceneMoveEnd;
-                this.moveTime = 0;
-                this.viewRotating = false;
-                this.moveSpeed = SCENE.MOVE_SPEED;
-                this.changeViews();
+            if(!this.animate) this.rotationTime = this.SCENE_ROTATE_TIME;
+            this.rotationTime += delta;
+            this.rotateGroup.rotation.x += (this.rotSpeed * delta);
+            if(this.rotationTime >= this.SCENE_ROTATE_TIME) {
+                this.rotateGroup.rotation.x = this.sceneRotEnd;
+                this.rotationTime = 0;
+                this.sceneRotating = false;
             }
         }
 
@@ -896,9 +895,10 @@ class FTSEApp extends BaseApp {
     toggleView() {
         if(this.sceneRotating || this.viewRotating) return;
 
+        this.rotateGroup = this.weeklyView ? this.parentGroupWeekly : this.parentGroupDaily;
+        this.rotSpeed = -this.ROT_INC_DAILY / this.SCENE_ROTATE_TIME;
         this.viewRotating = true;
         this.weeklyView = !this.weeklyView;
-        this.moveToView();
     }
 
     changeViews() {
@@ -914,14 +914,6 @@ class FTSEApp extends BaseApp {
         }
         let month = this.weeklyView ? this.currentMonthWeekly : this.currentMonthDaily;
         $('#month').html(this.data[month].month);
-    }
-
-    moveToView() {
-        let distance = this.VIEW_MOVE_INC;
-        this.moveSpeed = this.VIEW_MOVE_INC / this.SCENE_MOVE_TIME;
-        this.moveSpeed *= this.weeklyView ? -1 : 1;
-        distance *= this.weeklyView ? -1 : 1;
-        this.sceneMoveEnd = this.root.position.x + distance;
     }
 
     zoomOut(zoom) {
