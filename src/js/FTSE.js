@@ -45,11 +45,14 @@ class FTSEApp extends BaseApp {
         this.DIV_ROT_INC = this.ROT_INC_DAILY/this.DIVS_PER_SEGMENT;
         this.SEG_OFFSET = 2;
         this.SCENE_ROTATE_TIME = 2;
+        this.VIEW_ROTATE_TIME = 4;
         this.sceneRotating = false;
         this.sceneMoving = false;
         this.sceneRotStart = 0;
         this.sceneRotEnd = 0;
+        this.sceneRotViewEnd = Math.PI;
         this.rotSpeed = 0;
+        this.rotViewSpeed = -Math.PI / 4;
         this.rotationTime = 0;
         this.moveTime = 0;
         this.animate = true;
@@ -777,11 +780,11 @@ class FTSEApp extends BaseApp {
         if(this.viewRotating) {
             if(!this.animate) this.rotationTime = this.SCENE_ROTATE_TIME;
             this.rotationTime += delta;
-            this.rotateGroup.rotation.x += (this.rotSpeed * delta);
-            if(this.rotationTime >= this.SCENE_ROTATE_TIME) {
-                this.rotateGroup.rotation.x = this.sceneRotEnd;
+            this.rotateGroup.rotation.x += (this.rotViewSpeed * delta);
+            if(this.rotationTime >= this.VIEW_ROTATE_TIME) {
+                this.rotateGroup.rotation.x = this.sceneRotViewEnd;
                 this.rotationTime = 0;
-                this.sceneRotating = false;
+                this.viewRotating = false;
             }
         }
 
