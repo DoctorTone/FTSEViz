@@ -572,7 +572,6 @@ class FTSEApp extends BaseApp {
     updateSceneDaily() {
         //Update info
         let month = this.currentMonthDaily;
-        $('#year').html(this.data[month].year);
         $('#month').html(this.data[month].month);
 
         //Grey out unused blocks for each month
@@ -605,6 +604,8 @@ class FTSEApp extends BaseApp {
             this.setShareDailyPrice(i, dailyPrices[i - start]);
         }
 
+        let showWeek = this.currentWeek + 1;
+        $('#week').html(showWeek);
     }
 
     setSceneWeekly() {
@@ -646,6 +647,9 @@ class FTSEApp extends BaseApp {
 
         this.setShareWeeklyPriceSegment(segment, data);
         $('#month').html(this.data[this.currentMonthWeekly].month);
+
+        let showWeek = this.currentWeek + 1;
+        $('#week').html(showWeek);
     }
 
     clearBlocks() {
@@ -743,6 +747,8 @@ class FTSEApp extends BaseApp {
                 this.sceneRotating = false;
                 if(this.weeklyView) {
                     this.updateSceneWeekly();
+                } else {
+                    this.updateSceneDaily();
                 }
             }
         }
@@ -828,9 +834,6 @@ class FTSEApp extends BaseApp {
                 this.facingSegment = SCENE.NUM_SEGMENTS - 1;
             }
         }
-
-        let showWeek = this.currentWeek + 1;
-        $('#week').html(showWeek);
     }
 
     nextSegment() {
@@ -848,9 +851,6 @@ class FTSEApp extends BaseApp {
                 this.facingSegment = 0;
             }
         }
-
-        let showWeek = this.currentWeek + 1;
-        $('#week').html(showWeek);
     }
 
     nextMonth() {
