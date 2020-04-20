@@ -22,9 +22,9 @@ body {
     width: 15%;
 }
 #infoTab {
-    top: 25%;
+    top: 15%;
     left: 0;
-    width: 5%;
+    width: 15%;
     cursor: pointer;
 }
 #controlTab {
