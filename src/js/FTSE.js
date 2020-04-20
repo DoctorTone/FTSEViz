@@ -483,7 +483,7 @@ class FTSEApp extends BaseApp {
         //Ground plane
         const GROUND_WIDTH = 2000, GROUND_HEIGHT = 2000, SEGMENTS = 16;
         let groundGeom = new THREE.PlaneBufferGeometry(GROUND_WIDTH, GROUND_HEIGHT);
-        let groundMat = new THREE.MeshLambertMaterial( {color: appearanceConfig.Ground, depthWrite: false} );
+        let groundMat = new THREE.MeshLambertMaterial( {color: appearanceConfig.Ground} );
         let ground = new THREE.Mesh(groundGeom, groundMat);
         ground.name = "Ground";
         ground.rotation.x = -Math.PI/2;
@@ -969,12 +969,14 @@ $(document).ready( () => {
     const closeButtonInfo = $("#closeButtonInfo");
     const nextWeek = $("#nextWeek");
     const previousWeek = $("#previousWeek");
+    const nextMonth = $("#nextMonth");
+    const previousMonth = $("#previousMonth");
 
-    $('#nextMonth').on("click", () => {
+    nextMonth.on("click", () => {
         app.nextMonth();
     });
 
-    $('#previousMonth').on("click", () => {
+    previousMonth.on("click", () => {
         app.previousMonth();
     });
 
