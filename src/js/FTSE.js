@@ -101,8 +101,10 @@ class FTSEApp extends BaseApp {
         weeklyParent.position.set(SCENE.MONTHLY_X, SCENE.MONTHLY_Y, SCENE.MONTHLY_Z);
         this.parentGroupWeekly = weeklyParent;
         this.parentGroupWeekly.rotation.y = -(this.ROT_INC_DAILY * 2);
+        this.parentGroupWeekly.rotation.x = Math.PI;
+        this.parentGroupWeekly.visible = false;
         this.facingSegment = 2;
-        //this.root.add(weeklyParent);
+        this.root.add(weeklyParent);
 
         //Walls
         let wallMat = new THREE.MeshLambertMaterial({color: SCENE.WALL_COLOUR, transparent: true, opacity: SCENE.WALL_OPACITY});
