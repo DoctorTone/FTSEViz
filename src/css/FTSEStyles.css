@@ -28,9 +28,9 @@ body {
     cursor: pointer;
 }
 #controlTab {
-    top: 25%;
-    right: 0;
-    width: 8.5%;
+    top: 15%;
+    right: 1%;
+    width: 5%;
     cursor: pointer;
 }
 .sideNavLeft {
