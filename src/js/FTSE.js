@@ -12,7 +12,7 @@ import data from "../../data/ftse100_2016.json";
 const appearanceConfig = {
     Back: '#5c5f64',
     Ground: '#0x999999',
-    Block: '#ed53cc'
+    Block: '#fcba03'
 };
 
 class FTSEApp extends BaseApp {
