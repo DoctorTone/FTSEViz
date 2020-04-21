@@ -11,7 +11,7 @@ import data from "../../data/ftse100_2016.json";
 
 const appearanceConfig = {
     Back: '#5c5f64',
-    Ground: '0x999999',
+    Ground: SCENE.BACKGROUND,
     Block: '#fcba03'
 };
 
@@ -494,13 +494,15 @@ class FTSEApp extends BaseApp {
         let ground = new THREE.Mesh(groundGeom, groundMat);
         ground.name = "Ground";
         ground.rotation.x = -Math.PI/2;
-        this.root.add(ground);
+        //this.root.add(ground);
+        this.addToScene(ground);
 
         // Grid
         let grid = new THREE.GridHelper( 2000, 50, 0x000000, 0x000000 );
 		grid.material.opacity = 0.2;
         grid.material.transparent = true;
-        this.root.add(grid);
+        //this.root.add(grid);
+        this.addToScene(grid);
     }
 
     preProcessData() {
@@ -787,10 +789,10 @@ class FTSEApp extends BaseApp {
             this.rotationTime += delta;
             this.root.rotation.x += (this.rotViewSpeed * delta);
             if(this.rotationTime >= this.VIEW_ROTATE_TIME) {
-                this.root.rotation.x = this.sceneRotViewEnd;
+                this.weeklyView = !this.weeklyView;
+                this.root.rotation.x = this.weeklyView ? this.sceneRotViewEnd : 0;
                 this.rotationTime = 0;
                 this.viewRotating = false;
-                this.weeklyView = !this.weeklyView;
                 this.parentGroupWeekly.visible = this.weeklyView;
                 this.parentGroupDaily.visible = !this.weeklyView;
                 $("#viewMode").html(this.weeklyView ? "Weekly" : "Daily");
@@ -907,8 +909,6 @@ class FTSEApp extends BaseApp {
     toggleView() {
         if(this.sceneRotating || this.viewRotating) return;
 
-        this.currentViewGroup = this.weeklyView ? this.parentGroupWeekly : this.parentGroupDaily;
-        this.rotSpeed = -this.ROT_INC_DAILY / this.SCENE_ROTATE_TIME;
         this.viewRotating = true;
     }
 
