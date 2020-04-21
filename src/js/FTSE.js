@@ -8,6 +8,7 @@ import * as SCENE from "./sceneConfig";
 import { MONTHS, NUM_MONTHS, DATES } from "./dates";
 import { LabelManager } from "./labelManager";
 import data from "../../data/ftse100_2016.json";
+import bootstrap from "bootstrap";
 
 const appearanceConfig = {
     Back: '#5c5f64',
