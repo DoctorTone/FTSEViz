@@ -50,7 +50,7 @@ export class BaseApp {
     createRenderer() {
         this.renderer = new THREE.WebGLRenderer( {antialias : true, alpha: true});
         //this.renderer.setClearColor(0x5c5f64, 1.0);
-        this.renderer.shadowMapEnabled = true;
+        this.renderer.shadowMap.enabled = true;
         let isMSIE = /*@cc_on!@*/0;
 
         let width = this.container.clientWidth;
@@ -147,12 +147,13 @@ export class BaseApp {
 
         
         light = new THREE.DirectionalLight( 0xffffff );
-        light.position.set( 300, 500, 300 );
+        light.position.set( 90, 150, 90 );
         light.castShadow = true;
         light.shadow.camera.top = 180;
         light.shadow.camera.bottom = - 100;
         light.shadow.camera.left = - 120;
         light.shadow.camera.right = 120;
+        scene.add( new THREE.CameraHelper( light.shadow.camera ) );
         scene.add( light );
         
 
@@ -213,9 +214,10 @@ export class BaseApp {
         this.controls.dynamicDampingFactor = 0.3;
 
         // Disable controls
-        this.controls.noRotate = true;
-	    this.controls.noZoom = true;
-        this.controls.noPan = true;
+        const disableControls = false;
+        this.controls.noRotate = disableControls;
+	    this.controls.noZoom = disableControls;
+        this.controls.noPan = disableControls;
 
         this.controls.keys = [ 65, 83, 68 ];
 

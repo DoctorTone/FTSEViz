@@ -194,6 +194,7 @@ class FTSEApp extends BaseApp {
                 column = new THREE.Mesh(blockInfo.geom, blockInfo.mat);
                 column.position.copy(this.getBlockPosition(segment, i, this.WALL_RADIUS));
                 column.position.y += SCENE.COLUMN_HEIGHT/2;
+                column.castShadow = true;
                 column.name = blockInfo.name + blockNum;
                 ++blockNum;
                 blockInfo.parent.add(column);
@@ -429,6 +430,7 @@ class FTSEApp extends BaseApp {
         let ground = new THREE.Mesh(groundGeom, groundMat);
         ground.name = "Ground";
         ground.rotation.x = -Math.PI/2;
+        ground.receiveShadow = true;
         //this.root.add(ground);
         this.addToScene(ground);
 
@@ -691,6 +693,8 @@ class FTSEApp extends BaseApp {
                 this.sceneRotating = false;
                 if(this.weeklyView) {
                     this.updateSceneWeekly();
+                } else {
+                    $("#week").html(this.currentWeek + 1);
                 }
             }
         }

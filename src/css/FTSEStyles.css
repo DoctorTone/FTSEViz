@@ -29,8 +29,8 @@ body {
 }
 #controlTab {
     top: 20%;
-    right: 1%;
-    width: 8%;
+    right: 0%;
+    width: 9%;
     cursor: pointer;
 }
 #toggleControls {
