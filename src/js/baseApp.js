@@ -153,7 +153,7 @@ export class BaseApp {
         light.shadow.camera.bottom = - 100;
         light.shadow.camera.left = - 120;
         light.shadow.camera.right = 120;
-        scene.add( new THREE.CameraHelper( light.shadow.camera ) );
+        //scene.add( new THREE.CameraHelper( light.shadow.camera ) );
         scene.add( light );
         
 
