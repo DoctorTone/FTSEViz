@@ -67,8 +67,7 @@ class FTSEApp extends BaseApp {
         this.currentLabel = undefined;
         this.currentViewGroup;
 
-        this.currentMonthDaily = MONTHS.JANUARY;
-        this.currentMonthWeekly = MONTHS.JANUARY;
+        this.currentMonth = MONTHS.JANUARY;
 
         this.currentWeek = 0;
 
@@ -207,7 +206,7 @@ class FTSEApp extends BaseApp {
         let labelProperty, text;
         let scale = new THREE.Vector3(20, 10, 1);
         let label, labelNumber = 0, labelOffsetY = 5;
-        let data = this.data[this.currentMonthDaily].shares;
+        let data = this.data[this.currentMonth].shares;
 
         for(let segment=0; segment<SCENE.NUM_SEGMENTS; ++segment) {
             for(let i=0; i<SCENE.NUM_COLUMNS_PER_SEGMENT; ++i) {
@@ -246,7 +245,7 @@ class FTSEApp extends BaseApp {
         let labelProperty;
         let scale = new THREE.Vector3(20, 10, 1);
         let label, labelNumber = 0, labelOffsetY = 7, price;
-        let data = this.data[this.currentMonthDaily].shares;
+        let data = this.data[this.currentMonth].shares;
 
         for(let segment=0; segment<SCENE.NUM_SEGMENTS; ++segment) {
             for(let i=0; i<SCENE.NUM_COLUMNS_PER_SEGMENT; ++i) {
@@ -275,7 +274,7 @@ class FTSEApp extends BaseApp {
         let labelProperty;
         let scale = new THREE.Vector3(20, 10, 1);
         let label, labelNumber = 0, labelOffsetY = 7, price;
-        let data = this.data[this.currentMonthWeekly].sharesWeekly;
+        let data = this.data[this.currentMonth].sharesWeekly;
 
         for(let segment=0; segment<SCENE.NUM_SEGMENTS; ++segment) {
             for(let i=0; i<SCENE.NUM_COLUMNS_PER_SEGMENT; ++i) {
@@ -326,7 +325,7 @@ class FTSEApp extends BaseApp {
     updateDateLabels() {
         this.clearDateLabels();
         let label, baseName = "dateLabel", labelNumber = 0, dayNumber = 0;
-        let month = this.currentMonthDaily;
+        let month = this.currentMonth;
         let data = this.data[month].shares;
         let start = this.data[month].startSlot, end = this.data[month].endSlot + (4 * SCENE.NUM_COLUMNS_PER_SEGMENT);
         let text;
@@ -580,7 +579,7 @@ class FTSEApp extends BaseApp {
 
     updateSceneDaily() {
         //Update info
-        let month = this.currentMonthDaily;
+        let month = this.currentMonth;
         $('#month').html(this.data[month].month);
 
         //Grey out unused blocks for each month
@@ -618,7 +617,7 @@ class FTSEApp extends BaseApp {
     }
 
     setSceneWeekly() {
-        let month = this.currentMonthWeekly - 2;
+        let month = this.currentMonth - 2;
         if(month < 0) {
             month += NUM_MONTHS;
         }
@@ -637,7 +636,7 @@ class FTSEApp extends BaseApp {
 
     updateSceneWeekly() {
         let increment = this.rotSpeed < 0 ? 2 : -2;
-        let month = this.currentMonthWeekly + increment;
+        let month = this.currentMonth + increment;
         if(month >= NUM_MONTHS) {
             month -= NUM_MONTHS;
         }
@@ -655,7 +654,7 @@ class FTSEApp extends BaseApp {
         }
 
         this.setShareWeeklyPriceSegment(segment, data);
-        $('#month').html(this.data[this.currentMonthWeekly].month);
+        $('#month').html(this.data[this.currentMonth].month);
 
         let showWeek = this.currentWeek + 1;
         $('#week').html(showWeek);
@@ -709,12 +708,12 @@ class FTSEApp extends BaseApp {
     }
 
     getShareText(block) {
-        let prices = this.weeklyView ? this.realWeeklyPricesPerMonth[this.currentMonthWeekly] :
-            this.realDailyPricesPerMonth[this.currentMonthDaily];
+        let prices = this.weeklyView ? this.realWeeklyPricesPerMonth[this.currentMonth] :
+            this.realDailyPricesPerMonth[this.currentMonth];
 
         let start = 0;
         if(!this.weeklyView) {
-            start = this.data[this.currentMonthDaily].startSlot;
+            start = this.data[this.currentMonth].startSlot;
             block -= start;
             if(block <0) {
                 return "No Data";
@@ -861,15 +860,15 @@ class FTSEApp extends BaseApp {
         if(this.sceneRotating || this.viewRotating) return;
 
         if(this.weeklyView) {
-            ++this.currentMonthWeekly;
-            if(this.currentMonthWeekly > MONTHS.DECEMBER) this.currentMonthWeekly = MONTHS.JANUARY;
+            ++this.currentMonth;
+            if(this.currentMonth > MONTHS.DECEMBER) this.currentMonth = MONTHS.JANUARY;
             this.showPriceLabels(this.showPrices);
             this.nextSegment();
             return;
         }
 
-        ++this.currentMonthDaily;
-        if(this.currentMonthDaily > MONTHS.DECEMBER) this.currentMonthDaily = MONTHS.JANUARY;
+        ++this.currentMonth;
+        if(this.currentMonth > MONTHS.DECEMBER) this.currentMonth = MONTHS.JANUARY;
 
         this.moveSpeed = this.MOVE_INC / this.SCENE_MOVE_TIME;
         this.sceneMoveEnd = this.parentGroupDaily.position.y + this.MOVE_INC;
@@ -882,14 +881,14 @@ class FTSEApp extends BaseApp {
         if(this.sceneRotating || this.sceneMoving || this.viewRotating) return;
 
         if(this.weeklyView) {
-            --this.currentMonthWeekly;
-            if(this.currentMonthWeekly < MONTHS.JANUARY) this.currentMonthWeekly = MONTHS.DECEMBER;
+            --this.currentMonth;
+            if(this.currentMonth < MONTHS.JANUARY) this.currentMonth = MONTHS.DECEMBER;
             this.previousSegment();
             return;
         }
 
-        --this.currentMonthDaily;
-        if(this.currentMonthDaily < MONTHS.JANUARY) this.currentMonthDaily = MONTHS.DECEMBER;
+        --this.currentMonth;
+        if(this.currentMonth < MONTHS.JANUARY) this.currentMonth = MONTHS.DECEMBER;
         this.moveSpeed = this.MOVE_INC / this.SCENE_MOVE_TIME;
         this.sceneMoveEnd = this.parentGroupDaily.position.y + this.MOVE_INC;
         this.sceneMoving = true;
@@ -913,7 +912,7 @@ class FTSEApp extends BaseApp {
             weekControls.hide();
             weekInfo.hide();
         }
-        let month = this.weeklyView ? this.currentMonthWeekly : this.currentMonthDaily;
+        let month = this.currentMonth;
         $('#month').html(this.data[month].month);
     }
 
