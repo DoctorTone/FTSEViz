@@ -834,43 +834,31 @@ class FTSEApp extends BaseApp {
         }
     }
 
-    previousSegment() {
+    previousWeek() {
         //Move to previous segment
-        if(this.sceneRotating || this.sceneMoving || this.viewRotating) return;
+        if(this.sceneRotating || this.viewRotating) return;
 
-        this.rotateGroup = this.weeklyView ? this.parentGroupWeekly : this.parentGroupDaily;
+        this.rotateGroup = this.parentGroupDaily;
         this.rotSpeed = this.ROT_INC_DAILY / this.SCENE_ROTATE_TIME;
         this.sceneRotEnd = this.rotateGroup.rotation.y + this.ROT_INC_DAILY;
         if(--this.currentWeek < 0) this.currentWeek = DATES.WEEKS_PER_MONTH;
         this.sceneRotating = true;
-
-        if(this.weeklyView) {
-            if(--this.facingSegment < 0) {
-                this.facingSegment = SCENE.NUM_SEGMENTS - 1;
-            }
-        }
     }
 
-    nextSegment() {
+    nextWeek() {
         //Move to next segment
-        if(this.sceneRotating || this.sceneMoving || this.viewRotating) return;
+        if(this.sceneRotating || this.viewRotating) return;
 
         this.rotSpeed = -this.ROT_INC_DAILY / this.SCENE_ROTATE_TIME;
-        this.rotateGroup = this.weeklyView ? this.parentGroupWeekly : this.parentGroupDaily;
+        this.rotateGroup = this.parentGroupDaily;
         this.sceneRotEnd = this.rotateGroup.rotation.y - this.ROT_INC_DAILY;
         if(++this.currentWeek > DATES.WEEKS_PER_MONTH) this.currentWeek = 0;
         this.sceneRotating = true;
-
-        if(this.weeklyView) {
-            if(++this.facingSegment >= SCENE.NUM_SEGMENTS) {
-                this.facingSegment = 0;
-            }
-        }
     }
 
     nextMonth() {
         //Animate to show next month
-        if(this.sceneRotating || this.sceneMoving || this.viewRotating) return;
+        if(this.sceneRotating || this.viewRotating) return;
 
         if(this.weeklyView) {
             ++this.currentMonthWeekly;
@@ -987,11 +975,11 @@ $(document).ready( () => {
     });
 
     previousWeek.on("click", () => {
-        app.previousSegment();
+        app.previousWeek();
     });
 
     nextWeek.on("click", () => {
-        app.nextSegment();
+        app.nextWeek();
     });
 
     toggleDisplay.on("click", () => {
