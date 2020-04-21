@@ -691,8 +691,6 @@ class FTSEApp extends BaseApp {
                 this.sceneRotating = false;
                 if(this.weeklyView) {
                     this.updateSceneWeekly();
-                } else {
-                    this.updateSceneDaily();
                 }
             }
         }
@@ -737,6 +735,7 @@ class FTSEApp extends BaseApp {
                     this.updateSceneWeekly();
                 } else {
                     this.updateSceneDaily();
+                    this.updateDateLabels();
                 }
             }
         }
@@ -787,7 +786,7 @@ class FTSEApp extends BaseApp {
 
     nextWeek() {
         //Move to next week - daily view only
-        if(this.sceneRotating || this.viewRotating) return;
+        if(this.sceneRotating || this.sceneMoving || this.viewRotating) return;
 
         this.rotSpeed = -this.ROT_INC_DAILY / this.SCENE_ROTATE_TIME;
         this.rotateGroup = this.parentGroupDaily;
@@ -804,6 +803,10 @@ class FTSEApp extends BaseApp {
         this.rotateGroup = this.parentGroupWeekly;
         this.sceneRotEnd = this.rotateGroup.rotation.y - this.ROT_INC_DAILY;
         this.sceneRotating = true;
+
+        if(++this.facingSegment >= SCENE.NUM_SEGMENTS) {
+            this.facingSegment = 0;
+        }
     }
 
     previousSegment() {
@@ -814,6 +817,10 @@ class FTSEApp extends BaseApp {
         this.rotateGroup = this.parentGroupWeekly;
         this.sceneRotEnd = this.rotateGroup.rotation.y + this.ROT_INC_DAILY;
         this.sceneRotating = true;
+
+        if(--this.facingSegment < 0) {
+            this.facingSegment = SCENE.NUM_SEGMENTS - 1;
+        }
     }
 
     nextMonth() {
