@@ -796,6 +796,7 @@ class FTSEApp extends BaseApp {
                 this.parentGroupWeekly.visible = this.weeklyView;
                 this.parentGroupDaily.visible = !this.weeklyView;
                 $("#viewMode").html(this.weeklyView ? "Weekly" : "Daily");
+                this.weeklyView ? $("#weekControls").addClass("d-none") : $("#weekControls").removeClass("d-none");
             }
         }
 
