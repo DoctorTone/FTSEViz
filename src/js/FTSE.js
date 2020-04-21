@@ -342,70 +342,6 @@ class FTSEApp extends BaseApp {
         }
     }
 
-    createGUI() {
-        //Create GUI - controlKit
-        window.addEventListener('load', () => {
-            let appearanceConfig = {
-                Back: '#5c5f64',
-                Ground: '#0c245c',
-                Block: '#fffb37'
-            };
-            let settingsConfig = {
-              Animate: true,
-              Labels: true,
-              Prices: false
-            };
-
-            let guiWidth = $('#guiWidth').css("width");
-            guiWidth = parseInt(guiWidth, 10);
-            if(!guiWidth) guiWidth = window.innerWidth * 0.1;
-            let controlKit = new ControlKit();
-
-            controlKit.addPanel({label: "Configuration", width: guiWidth, enable: false})
-                .addSubGroup({label: "Appearance", enable: false})
-                    .addColor(appearanceConfig, "Back", {
-                        colorMode: "hex", onChange: () => {
-                            this.onBackgroundColourChanged(appearanceConfig.Back);
-                        }
-                    })
-                    .addColor(appearanceConfig, "Ground", {
-                        colorMode: "hex", onChange: () => {
-                            this.onGroundColourChanged(appearanceConfig.Ground);
-                        }
-                    })
-                    .addColor(appearanceConfig, "Block", {
-                        colorMode: "hex", onChange: () => {
-                            this.onBlockColourChanged(appearanceConfig.Block);
-                        }
-                    })
-                .addSubGroup( {label: "Settings", enable: false})
-                    .addCheckbox(settingsConfig, "Animate", {
-                        onChange: () => {
-                            this.toggleAnimation();
-                        }
-                    })
-                    .addCheckbox(settingsConfig, "Labels", {
-                        onChange: () => {
-                            this.toggleLabels();
-                        }
-                    })
-                    .addCheckbox(settingsConfig, "Prices", {
-                        onChange: () => {
-                            this.togglePrices();
-                        }
-                    })
-                .addSubGroup( {label: "Preferences"})
-                    .addButton("Save", () => {
-                        for(let prop in saveConfig) {
-                            if(prop in appearanceConfig) {
-                                saveConfig[prop] = appearanceConfig[prop];
-                            }
-                        }
-                        this.savePreferences(saveConfig);
-                    })
-        });
-    }
-
     onBackgroundColourChanged(colour) {
         this.renderer.setClearColor(colour, 1.0);
     }
@@ -797,6 +733,11 @@ class FTSEApp extends BaseApp {
                 $("#viewMode").html(this.weeklyView ? "Weekly" : "Daily");
                 this.weeklyView ? $("#weekControls").addClass("d-none") : $("#weekControls").removeClass("d-none");
                 this.weeklyView ? $("#weekContainer").addClass("d-none") : $("#weekContainer").removeClass("d-none");
+                if(this.weeklyView) {
+                    this.updateSceneWeekly();
+                } else {
+                    this.updateSceneDaily();
+                }
             }
         }
 
@@ -845,7 +786,7 @@ class FTSEApp extends BaseApp {
     }
 
     nextWeek() {
-        //Move to next segment
+        //Move to next week - daily view only
         if(this.sceneRotating || this.viewRotating) return;
 
         this.rotSpeed = -this.ROT_INC_DAILY / this.SCENE_ROTATE_TIME;
@@ -855,9 +796,29 @@ class FTSEApp extends BaseApp {
         this.sceneRotating = true;
     }
 
+    nextSegment() {
+        // Move to next segment - weekly view only
+        if(this.sceneRotating || this.viewRotating) return;
+
+        this.rotSpeed = -this.ROT_INC_DAILY / this.SCENE_ROTATE_TIME;
+        this.rotateGroup = this.parentGroupWeekly;
+        this.sceneRotEnd = this.rotateGroup.rotation.y - this.ROT_INC_DAILY;
+        this.sceneRotating = true;
+    }
+
+    previousSegment() {
+        // Move to previous segment - weekly view only
+        if(this.sceneRotating || this.viewRotating) return;
+
+        this.rotSpeed = this.ROT_INC_DAILY / this.SCENE_ROTATE_TIME;
+        this.rotateGroup = this.parentGroupWeekly;
+        this.sceneRotEnd = this.rotateGroup.rotation.y + this.ROT_INC_DAILY;
+        this.sceneRotating = true;
+    }
+
     nextMonth() {
         //Animate to show next month
-        if(this.sceneRotating || this.viewRotating) return;
+        if(this.sceneRotating || this.sceneMoving || this.viewRotating) return;
 
         if(this.weeklyView) {
             ++this.currentMonth;
