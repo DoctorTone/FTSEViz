@@ -908,6 +908,10 @@ class FTSEApp extends BaseApp {
         document.getElementById("infoTab").style.display = "block";
     }
 
+    toggleShadows() {
+        this.directionalLight.castShadow = !this.directionalLight.castShadow;
+    }
+
     stopNotifications(elemList) {
         for(let i=0, numElems=elemList.length; i<numElems; ++i) {
             $('#' + elemList[i]).contextmenu(() => {
@@ -936,6 +940,7 @@ $(document).ready( () => {
     const nextMonth = $("#nextMonth");
     const previousMonth = $("#previousMonth");
     const toggleDisplay = $("#toggleDisplay");
+    const toggleShadows = $("#toggleShadows");
 
     nextMonth.on("click", () => {
         app.nextMonth();
@@ -954,8 +959,11 @@ $(document).ready( () => {
     });
 
     toggleDisplay.on("click", () => {
-        console.log("Changed view");
         app.toggleView();
+    });
+
+    toggleShadows.on("click", () => {
+        app.toggleShadows();
     });
 
     let zoomOutElement = $('#zoomOut');

@@ -143,18 +143,20 @@ export class BaseApp {
 
         let light = new THREE.HemisphereLight( 0x555555, 0x222222 );
 		light.position.set( 0, 2000, 0 );
-		scene.add( light );
+        scene.add( light );
+        this.hemisphereLight = light;
 
         
-        light = new THREE.DirectionalLight( 0xffffff );
-        light.position.set( 90, 150, 90 );
-        light.castShadow = true;
-        light.shadow.camera.top = 180;
-        light.shadow.camera.bottom = - 100;
-        light.shadow.camera.left = - 120;
-        light.shadow.camera.right = 120;
-        //scene.add( new THREE.CameraHelper( light.shadow.camera ) );
-        scene.add( light );
+        let directionalLight = new THREE.DirectionalLight( 0xffffff );
+        directionalLight.position.set( 90, 150, 90 );
+        directionalLight.castShadow = true;
+        directionalLight.shadow.camera.top = 180;
+        directionalLight.shadow.camera.bottom = - 100;
+        directionalLight.shadow.camera.left = - 120;
+        directionalLight.shadow.camera.right = 120;
+        //scene.add( new THREE.CameraHelper( directionalLight.shadow.camera ) );
+        scene.add( directionalLight );
+        this.directionalLight = directionalLight;
         
 
         /*
