@@ -36,17 +36,16 @@ body {
     border-radius: 20px;
     color: rgb(247, 187, 75);
 }
-#toggleControls {
-    top: 30%;
+.toggle {
     right: 4%;
     width: 8%;
     color: rgb(236, 157, 11);
 }
+#toggleControls {
+    top: 30%;
+}
 #toggleShadowsContainer {
     top: 35%;
-    right: 4%;
-    width: 8%;
-    color: rgb(236, 157, 11);
 }
 #viewMode {
     font-size: 1.25rem;
@@ -140,4 +139,24 @@ input:checked + .slider:before {
 
 .slider.round:before {
     border-radius: 50%;
+}
+
+@media (min-width: 1200px) {
+    #controlTab {
+        width: 10%;
+    }
+    .toggle {
+        width: 6%;
+    }
+}
+@media (min-width: 1600px) {
+    #controlTab {
+        width: 8%;
+    }
+    .toggle {
+        width: 4%;
+    }
+    #viewMode {
+        padding-left: 10px;
+    }
 }
