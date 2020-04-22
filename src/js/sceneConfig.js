@@ -37,3 +37,4 @@ export const CAM_POS_FAR_Z = 500;
 export const NEAR = 0;
 export const FAR = 1;
 export const MOBILE_WIDTH = 768;
+export const SCREEN_SIZE_LARGE = 1024;
