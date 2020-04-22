@@ -16,6 +16,8 @@ const appearanceConfig = {
     Block: '#fcba03'
 };
 
+const SIDEBAR_WIDTH = "200px";
+
 class FTSEApp extends BaseApp {
     constructor() {
         super();
@@ -913,7 +915,7 @@ class FTSEApp extends BaseApp {
     }
 
     openSideMenuLeft() {
-        document.getElementById("sideMenuInfoLeft").style.width = "250px";
+        document.getElementById("sideMenuInfoLeft").style.width = SIDEBAR_WIDTH;
         //document.getElementById("WebGL-Output").style.marginLeft = "250px";
         document.getElementById("infoTab").style.display = "none";
     }
@@ -925,7 +927,7 @@ class FTSEApp extends BaseApp {
     }
 
     openSideMenuRight() {
-        document.getElementById("sideMenuInfoRight").style.width = "250px";
+        document.getElementById("sideMenuInfoRight").style.width = SIDEBAR_WIDTH;
         //document.getElementById("WebGL-Output").style.marginLeft = "250px";
         document.getElementById("infoTab").style.display = "none";
     }

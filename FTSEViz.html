@@ -77,22 +77,14 @@
     <!-- Off canvas menu -->
     <div id="sideMenuInfoLeft" class="sideNavLeft panel">
         <a href="#" id="closeButtonInfoLeft" class="closebtn">&times;</a>
-        <div class="pl-5 py-5 mb-5">
+        <div class="pl-0 py-5 mb-5">
             <p class="display-4">January</p>
-            <h3>Week: 2</h3>
+            <h3 class="pl-2">Week: 2</h3>
         </div>
     </div>
 
     <div id="sideMenuIconRight" class="panel d-lg-none">
         <span style="font-size:25px;cursor:pointer">&#9776 Controls</span>
-    </div>
-
-    <div id="sideMenuInfoRight" class="sideNavRight panel">
-        <a href="#" id="closeButtonInfoRight" class="closebtn">&times;</a>
-        <div class="pl-5 py-5 mb-5">
-            <p class="display-4">January</p>
-            <h3>Week: 1</h3>
-        </div>
     </div>
 
     <!--
@@ -101,50 +93,52 @@
         <img src="./images/leftWhite.png" alt="Control Tab" class="w-50">
     </div>
     -->
-
-    <div id="controlTab" class="panel pt-3 px-3 text-center d-none d-lg-block">
-        <div id="monthControls" class="row mb-3">
-            <div class="col-3 px-0">
-                <img id="previousMonth" src="./images/leftWhite.png" alt="Week Left" class="w-100">
+    <div id="sideMenuInfoRight" class="sideNavRight panel">
+        <a href="#" id="closeButtonInfoRight" class="closebtn">&times;</a>
+        <div id="controlTab" class="pt-3 px-3 text-center">
+            <div id="monthControls" class="row mb-3">
+                <div class="col-3 px-0">
+                    <img id="previousMonth" src="./images/leftWhite.png" alt="Week Left" class="w-100">
+                </div>
+                <div class="col-6 px-0">
+                    <h5 class="my-0">Month</h5>
+                </div>
+                <div class="col-3 px-0">
+                    <img id="nextMonth" src="./images/rightWhite.png" alt="Week Left" class="w-100">
+                </div>
             </div>
-            <div class="col-6 px-0">
-                <h5 class="my-0">Month</h5>
+            <div id="weekControls" class="row">
+                <div class="col-3 px-0">
+                    <img id="previousWeek" src="./images/leftWhite.png" alt="Week Left" class="w-100">
+                </div>
+                <div class="col-6 px-0">
+                    <h5 class="my-0">Week</h5>
+                </div>
+                <div class="col-3 px-0">
+                    <img id="nextWeek" src="./images/rightWhite.png" alt="Week Right" class="w-100">
+                </div>
             </div>
-            <div class="col-3 px-0">
-                <img id="nextMonth" src="./images/rightWhite.png" alt="Week Left" class="w-100">
+            <div id="toggleControls" class="toggle row mt-3">
+                <div class="col-6 px-0">
+                    <label class="switch">
+                        <input id="toggleDisplay" type="checkbox" checked>
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+                <div class="col-6 px-0 font-weight-bold text-left">
+                    <span id="viewMode">Daily</span>
+                </div>
             </div>
-        </div>
-        <div id="weekControls" class="row">
-            <div class="col-3 px-0">
-                <img id="previousWeek" src="./images/leftWhite.png" alt="Week Left" class="w-100">
-            </div>
-            <div class="col-6 px-0">
-                <h5 class="my-0">Week</h5>
-            </div>
-            <div class="col-3 px-0">
-                <img id="nextWeek" src="./images/rightWhite.png" alt="Week Right" class="w-100">
-            </div>
-        </div>
-        <div id="toggleControls" class="toggle row mt-3">
-            <div class="col-6 px-0">
-                <label class="switch">
-                    <input id="toggleDisplay" type="checkbox" checked>
-                    <span class="slider round"></span>
-                </label>
-            </div>
-            <div class="col-6 px-0 font-weight-bold text-left">
-                <span id="viewMode">Daily</span>
-            </div>
-        </div>
-        <div id="toggleShadowsContainer" class="toggle row mt-1">
-            <div class="col-6 px-0">
-                <label class="switch">
-                    <input id="toggleShadows" type="checkbox" checked>
-                    <span class="slider round"></span>
-                </label>
-            </div>
-            <div class="col-6 px-0 font-weight-bold text-left">
-                <span id="shadowMode">Shadow</span>
+            <div id="toggleShadowsContainer" class="toggle row mt-1">
+                <div class="col-6 px-0">
+                    <label class="switch">
+                        <input id="toggleShadows" type="checkbox" checked>
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+                <div class="col-6 px-0 font-weight-bold text-left">
+                    <span id="shadowMode">Shadow</span>
+                </div>
             </div>
         </div>
     </div>
