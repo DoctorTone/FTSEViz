@@ -44,15 +44,7 @@ a:hover {
     color: rgb(247, 187, 75);
 }
 .toggle {
-    right: 4%;
-    width: 8%;
-    color: rgb(236, 157, 11);
-}
-#toggleControls {
-    top: 30%;
-}
-#toggleShadowsContainer {
-    top: 35%;
+    color: rgb(197, 129, 3);
 }
 #viewMode,
 #shadowMode {
@@ -71,18 +63,19 @@ a:hover {
     padding-top: 60px;
 }
 .sideNavRight {
-    height: 50%;
+    height: 100%;
     width: 0;
     position: fixed;
     z-index: 1;
-    top: 25%;
+    top: 0%;
     right: 0;
-    background-color: #111;
+    background-color: #797676;
     overflow-x: hidden;
     transition: 0.5s;
     padding-top: 60px;
 }
-.sideNavLeft .closebtn {
+.sideNavLeft .closebtn,
+.sideNavRight .closebtn {
     position: absolute;
     top: 0;
     right: 25px;
@@ -160,19 +153,9 @@ input:checked + .slider:before {
     #controlTab {
         width: 10%;
     }
-    .toggle {
-        width: 6%;
-    }
 }
 @media (min-width: 1600px) {
     #controlTab {
         width: 8%;
-    }
-    .toggle {
-        width: 4%;
-    }
-    #viewMode,
-    #shadowMode {
-        padding-left: 10px;
     }
 }
