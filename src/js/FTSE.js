@@ -737,7 +737,7 @@ class FTSEApp extends BaseApp {
                 this.weeklyView ? $("#weekControls").addClass("d-none") : $("#weekControls").removeClass("d-none");
                 this.weeklyView ? $("#weekContainer").addClass("d-none") : $("#weekContainer").removeClass("d-none");
                 if(this.weeklyView) {
-                    this.updateSceneWeekly();
+                    this.setSceneWeekly();
                 } else {
                     this.updateSceneDaily();
                     this.updateDateLabels();
