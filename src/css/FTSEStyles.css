@@ -47,7 +47,8 @@ body {
 #toggleShadowsContainer {
     top: 35%;
 }
-#viewMode {
+#viewMode,
+#shadowMode {
     font-size: 1.25rem;
 }
 .sideNavLeft {
@@ -156,7 +157,8 @@ input:checked + .slider:before {
     .toggle {
         width: 4%;
     }
-    #viewMode {
+    #viewMode,
+    #shadowMode {
         padding-left: 10px;
     }
 }
