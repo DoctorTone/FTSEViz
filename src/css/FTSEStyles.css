@@ -148,9 +148,13 @@ input:checked + .slider:before {
 .slider.round:before {
     border-radius: 50%;
 }
-#sideMenuIcon {
+#sideMenuIconLeft {
     top: 5%;
     left: 2.5%;
+}
+#sideMenuIconRight {
+    top: 5%;
+    right: 2.5%;
 }
 @media (min-width: 1200px) {
     #controlTab {

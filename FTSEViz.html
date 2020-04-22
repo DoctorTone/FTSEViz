@@ -70,13 +70,25 @@
         <h3 id="weekContainer">Week: <span id="week">1</span></h3>
     </div>
 
-    <div id="sideMenuIcon" class="panel d-lg-none">
+    <div id="sideMenuIconLeft" class="panel d-lg-none">
         <span style="font-size:25px;cursor:pointer">&#9776 Info</span>
     </div>
 
     <!-- Off canvas menu -->
-    <div id="sideMenuInfo" class="sideNavLeft panel">
-        <a href="#" id="closeButtonInfo" class="closebtn">&times;</a>
+    <div id="sideMenuInfoLeft" class="sideNavLeft panel">
+        <a href="#" id="closeButtonInfoLeft" class="closebtn">&times;</a>
+        <div class="pl-5 py-5 mb-5">
+            <p class="display-4">January</p>
+            <h3>Week: 2</h3>
+        </div>
+    </div>
+
+    <div id="sideMenuIconRight" class="panel d-lg-none">
+        <span style="font-size:25px;cursor:pointer">&#9776 Controls</span>
+    </div>
+
+    <div id="sideMenuInfoRight" class="sideNavRight panel">
+        <a href="#" id="closeButtonInfoRight" class="closebtn">&times;</a>
         <div class="pl-5 py-5 mb-5">
             <p class="display-4">January</p>
             <h3>Week: 1</h3>
@@ -90,7 +102,7 @@
     </div>
     -->
 
-    <div id="controlTab" class="panel pt-3 px-3 text-center">
+    <div id="controlTab" class="panel pt-3 px-3 text-center d-none d-lg-block">
         <div id="monthControls" class="row mb-3">
             <div class="col-3 px-0">
                 <img id="previousMonth" src="./images/leftWhite.png" alt="Week Left" class="w-100">

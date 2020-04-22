@@ -912,14 +912,26 @@ class FTSEApp extends BaseApp {
         this.zoomingIn = zoom;
     }
 
-    openSideMenu() {
-        document.getElementById("sideMenuInfo").style.width = "250px";
+    openSideMenuLeft() {
+        document.getElementById("sideMenuInfoLeft").style.width = "250px";
         //document.getElementById("WebGL-Output").style.marginLeft = "250px";
         document.getElementById("infoTab").style.display = "none";
     }
 
-    closeSideMenu() {
-        document.getElementById("sideMenuInfo").style.width = "0px";
+    closeSideMenuLeft() {
+        document.getElementById("sideMenuInfoLeft").style.width = "0px";
+        //document.getElementById("WebGL-Output").style.marginLeft = "0px";
+        document.getElementById("infoTab").style.display = "block";
+    }
+
+    openSideMenuRight() {
+        document.getElementById("sideMenuInfoRight").style.width = "250px";
+        //document.getElementById("WebGL-Output").style.marginLeft = "250px";
+        document.getElementById("infoTab").style.display = "none";
+    }
+
+    closeSideMenuRight() {
+        document.getElementById("sideMenuInfoRight").style.width = "0px";
         //document.getElementById("WebGL-Output").style.marginLeft = "0px";
         document.getElementById("infoTab").style.display = "block";
     }
@@ -950,14 +962,16 @@ $(document).ready( () => {
 
     // Elements
     const infoTab = $("#infoTab");
-    const closeButtonInfo = $("#closeButtonInfo");
+    const closeButtonInfoLeft = $("#closeButtonInfoLeft");
+    const closeButtonInfoRight = $("#closeButtonInfoRight");
     const nextWeek = $("#nextWeek");
     const previousWeek = $("#previousWeek");
     const nextMonth = $("#nextMonth");
     const previousMonth = $("#previousMonth");
     const toggleDisplay = $("#toggleDisplay");
     const toggleShadows = $("#toggleShadows");
-    let sideMenuIcon = $("#sideMenuIcon");
+    let sideMenuIconLeft = $("#sideMenuIconLeft");
+    let sideMenuIconRight = $("#sideMenuIconRight");
 
     nextMonth.on("click", () => {
         app.nextMonth();
@@ -1021,12 +1035,20 @@ $(document).ready( () => {
         app.openSideMenu();
     });
 
-    sideMenuIcon.on("click", () => {
-        app.openSideMenu();
+    sideMenuIconLeft.on("click", () => {
+        app.openSideMenuLeft();
     });
-    
-    closeButtonInfo.on("click", () => {
-        app.closeSideMenu();
+
+    closeButtonInfoLeft.on("click", () => {
+        app.closeSideMenuLeft();
+    });
+
+    sideMenuIconRight.on("click", () => {
+        app.openSideMenuRight();
+    });
+
+    closeButtonInfoRight.on("click", () => {
+        app.closeSideMenuRight();
     });
 
     $('#info').on("click", () => {
