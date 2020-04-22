@@ -5,6 +5,13 @@ body {
     overflow: hidden;
     color: white;
 }
+a {
+    color: white;
+}
+a:hover {
+    color: white;
+    text-decoration: none;
+}
 .panel {
     position: absolute;
 }
