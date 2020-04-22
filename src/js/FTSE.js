@@ -957,6 +957,7 @@ $(document).ready( () => {
     const previousMonth = $("#previousMonth");
     const toggleDisplay = $("#toggleDisplay");
     const toggleShadows = $("#toggleShadows");
+    let sideMenuIcon = $("#sideMenuIcon");
 
     nextMonth.on("click", () => {
         app.nextMonth();
@@ -1020,6 +1021,10 @@ $(document).ready( () => {
         app.openSideMenu();
     });
 
+    sideMenuIcon.on("click", () => {
+        app.openSideMenu();
+    });
+    
     closeButtonInfo.on("click", () => {
         app.closeSideMenu();
     });
