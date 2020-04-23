@@ -50,6 +50,10 @@ a:hover {
 .toggle {
     color: rgb(197, 129, 3);
 }
+.toggleSide {
+    color: rgb(197, 129, 3);
+    font-size: 1.3rem;
+}
 #viewMode,
 #shadowMode {
     font-size: 1.25rem;
