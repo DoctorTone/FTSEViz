@@ -968,10 +968,16 @@ $(document).ready( () => {
     const closeButtonInfoRight = $("#closeButtonInfoRight");
     const nextWeek = $("#nextWeek");
     const previousWeek = $("#previousWeek");
+    const nextWeekSide = $("#nextWeekSide");
+    const previousWeekSide = $("#previousWeekSide");
     const nextMonth = $("#nextMonth");
     const previousMonth = $("#previousMonth");
+    const nextMonthSide = $("#nextMonthSide");
+    const previousMonthSide = $("#previousMonthSide");
     const toggleDisplay = $("#toggleDisplay");
     const toggleShadows = $("#toggleShadows");
+    const toggleDisplaySide = $("#toggleDisplaySide");
+    const toggleShadowsSide = $("#toggleShadowsSide");
     let sideMenuIconLeft = $("#sideMenuIconLeft");
     let sideMenuIconRight = $("#sideMenuIconRight");
 
@@ -983,6 +989,14 @@ $(document).ready( () => {
         app.previousMonth();
     });
 
+    nextMonthSide.on("click", () => {
+        app.nextMonth();
+    });
+
+    previousMonthSide.on("click", () => {
+        app.previousMonth();
+    });
+
     previousWeek.on("click", () => {
         app.previousWeek();
     });
@@ -991,11 +1005,27 @@ $(document).ready( () => {
         app.nextWeek();
     });
 
+    previousWeekSide.on("click", () => {
+        app.previousWeek();
+    });
+
+    nextWeekSide.on("click", () => {
+        app.nextWeek();
+    });
+
     toggleDisplay.on("click", () => {
         app.toggleView();
     });
 
     toggleShadows.on("click", () => {
+        app.toggleShadows();
+    });
+
+    toggleDisplaySide.on("click", () => {
+        app.toggleView();
+    });
+
+    toggleShadowsSide.on("click", () => {
         app.toggleShadows();
     });
 
