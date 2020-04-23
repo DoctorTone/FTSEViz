@@ -158,11 +158,6 @@ class FTSEApp extends BaseApp {
 
         this.currentViewGroup = this.parentGroupDaily;
 
-        this.directionalLight.castShadow = true;
-        if (window.innerWidth < SCENE.SCREEN_SIZE_LARGE) {
-            this.directionalLight.castShadow = false;
-        }
-
         //Process data
         this.data = data;
         this.preProcessData();
@@ -180,15 +175,6 @@ class FTSEApp extends BaseApp {
             this.setCamera(SCENE.FAR);
         } else {
             this.setCamera(SCENE.NEAR);
-        }
-    }
-
-    windowResize(event) {
-        super.windowResize(event);
-
-        this.directionalLight.castShadow = true;
-        if (window.innerWidth < SCENE.SCREEN_SIZE_LARGE) {
-            this.directionalLight.castShadow = false;
         }
     }
 
