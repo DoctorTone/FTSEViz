@@ -537,6 +537,7 @@ class FTSEApp extends BaseApp {
         //Update info
         let month = this.currentMonth;
         $('#month').html(this.data[month].month);
+        $(`#monthSide`).html(this.data[month].month)
 
         //Grey out unused blocks for each month
         this.clearBlocks();
@@ -570,6 +571,7 @@ class FTSEApp extends BaseApp {
 
         let showWeek = this.currentWeek + 1;
         $('#week').html(showWeek);
+        $('#weekSide').html(showWeek);
     }
 
     setSceneWeekly() {
@@ -611,9 +613,11 @@ class FTSEApp extends BaseApp {
 
         this.setShareWeeklyPriceSegment(segment, data);
         $('#month').html(this.data[this.currentMonth].month);
+        $('#monthSide').html(this.data[this.currentMonth].month);
 
         let showWeek = this.currentWeek + 1;
         $('#week').html(showWeek);
+        $('#weekSide').html(showWeek);
     }
 
     clearBlocks() {
@@ -713,6 +717,7 @@ class FTSEApp extends BaseApp {
                     this.updateSceneWeekly();
                 } else {
                     $("#week").html(this.currentWeek + 1);
+                    $("#weekSide").html(this.currentWeek + 1);
                 }
             }
         }
@@ -753,6 +758,8 @@ class FTSEApp extends BaseApp {
                 $("#viewMode").html(this.weeklyView ? "Weekly" : "Daily");
                 this.weeklyView ? $("#weekControls").addClass("d-none") : $("#weekControls").removeClass("d-none");
                 this.weeklyView ? $("#weekContainer").addClass("d-none") : $("#weekContainer").removeClass("d-none");
+                this.weeklyView ? $("#weekControlsSide").addClass("d-none") : $("#weekControlsSide").removeClass("d-none");
+                this.weeklyView ? $("#weekContainerSide").addClass("d-none") : $("#weekContainerSide").removeClass("d-none");
                 if(this.weeklyView) {
                     this.setSceneWeekly();
                 } else {
@@ -896,14 +903,23 @@ class FTSEApp extends BaseApp {
         $('#toggleView').html(text);
         let weekControls = $('#weekControls');
         let weekInfo = $('#weekData');
+        let weekControlsSide = $('#weekControlsSide');
+        let weekInfoSide = $('#weekDataSide');
+
         weekControls.show();
         weekInfo.show();
+        weekControlsSide.show();
+        weekInfoSideSide.show();
+
         if(this.weeklyView) {
             weekControls.hide();
             weekInfo.hide();
+            weekControlsSide.hide();
+            weekInfoSideSide.hide();
         }
         let month = this.currentMonth;
         $('#month').html(this.data[month].month);
+        $('#monthSide').html(this.data[month].month);
     }
 
     zoomOut(zoom) {
