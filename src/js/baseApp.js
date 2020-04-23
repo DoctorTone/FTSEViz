@@ -216,7 +216,7 @@ export class BaseApp {
         this.controls.dynamicDampingFactor = 0.3;
 
         // Disable controls
-        const disableControls = false;
+        const disableControls = true;
         this.controls.noRotate = disableControls;
 	    this.controls.noZoom = disableControls;
         this.controls.noPan = disableControls;

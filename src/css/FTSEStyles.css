@@ -163,12 +163,23 @@ input:checked + .slider:before {
     top: 7%;
     right: 2.5%;
 }
+@media (min-width: 576px) and (orientation: landscape) {
+    #info {
+        width: 7.5%;
+    }
+}
 @media (min-width: 1200px) {
+    #info {
+        width: 5%;
+    }
     #controlTab {
         width: 10%;
     }
 }
 @media (min-width: 1600px) {
+    #info {
+        width: 4%;
+    }
     #controlTab {
         width: 8%;
     }
