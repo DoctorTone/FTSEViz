@@ -4,6 +4,8 @@
   "description": "FTSE-100 visualisations",
   "main": "gulpfile.js",
   "scripts": {
+    "start": "npx parcel FTSEViz.html",
+    "build": "npx parcel build FTSEViz.html",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
