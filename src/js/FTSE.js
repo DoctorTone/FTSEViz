@@ -1089,7 +1089,7 @@ $(document).ready( () => {
         $('#myModal').modal();
     });
 
-    let elemList = ["dateControls", "info", "instructions"];
+    let elemList = ["dateControls", "info", "infoTab", "controlTab", "title", "instructions", "copyright"];
     app.stopNotifications(elemList);
 
     app.run();

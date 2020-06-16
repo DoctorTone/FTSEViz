@@ -36,6 +36,8 @@ a:hover {
     top: 5%;
     left: 2%;
     width: 15%;
+    -webkit-user-select: none;
+    -webkit-touch-callout: none;
 }
 #controlTab {
     top: 10%;
