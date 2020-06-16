@@ -4,6 +4,8 @@ body {
     margin: 0;
     overflow: hidden;
     color: white;
+    -webkit-user-select: none;
+    -webkit-touch-callout: none;
 }
 a {
     color: white;
@@ -18,27 +20,22 @@ a:hover {
 .title {
     top: 1%;
     font-size: 0.75rem;
-    -webkit-user-select: none;
 }
 #info {
     bottom: 2%;
     left: 2%;
     width: 10%;
-    -webkit-touch-callout: none;
-    -webkit-user-select: none;
 }
 #copyright {
     bottom: 0%;
     right: 1%;
     width: 90%;
-    -webkit-user-select: none;
 }
 #infoTab {
     top: 5%;
     left: 2%;
     width: 15%;
     cursor: pointer;
-    -webkit-user-select: none;
 }
 #controlTab {
     top: 10%;
@@ -48,8 +45,6 @@ a:hover {
     /*background-color: #b6b5b5;*/
     border-radius: 20px;
     color: rgb(247, 187, 75);
-    -webkit-user-select: none;
-    -webkit-touch-callout: none
 }
 #controlTabSide {
     cursor: pointer;
@@ -108,13 +103,11 @@ a:hover {
     width: 50px;
     height: 30px;
 }
-
 .switch input { 
     opacity: 0;
     width: 0;
     height: 0;
 }
-  
 .slider {
     position: absolute;
     cursor: pointer;
@@ -138,7 +131,6 @@ a:hover {
     -webkit-transition: .4s;
     transition: .4s;
 }
-
 input:checked + .slider {
     background-color: #2196F3;
 }
@@ -146,7 +138,6 @@ input:checked + .slider {
 input:focus + .slider {
     box-shadow: 0 0 1px #2196F3;
 }
-
 input:checked + .slider:before {
     -webkit-transform: translateX(22px);
     -ms-transform: translateX(22px);
@@ -157,7 +148,6 @@ input:checked + .slider:before {
 .slider.round {
     border-radius: 30px;
 }
-
 .slider.round:before {
     border-radius: 50%;
 }
@@ -168,12 +158,6 @@ input:checked + .slider:before {
 #sideMenuIconRight {
     top: 7%;
     right: 2.5%;
-}
-#toggleControls {
-    -webkit-user-select: none;
-}
-#toggleShadowsContainer {
-    -webkit-user-select: none;
 }
 @media (min-width: 576px) and (orientation: landscape) {
     #info {
