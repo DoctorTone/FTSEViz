@@ -25,6 +25,7 @@ a:hover {
     bottom: 2%;
     left: 2%;
     width: 10%;
+    cursor: pointer;
 }
 #copyright {
     bottom: 0%;
@@ -35,7 +36,6 @@ a:hover {
     top: 5%;
     left: 2%;
     width: 15%;
-    cursor: pointer;
 }
 #controlTab {
     top: 10%;
